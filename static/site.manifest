@@ -1,0 +1,62 @@
+{
+  "name": "3WA - FSD",
+  "short_name": "3WA-FSD",
+  "description": "Formation Développeur Web Full Stack, projet de soutenance de fin de formation",
+  "author": "Wesley LEVASSEUR",
+  "authors": [
+    "Wesley LEVASSEUR"
+  ],
+  "keywords": [
+    "3WA",
+    "FSD",
+    "Formation",
+    "Développeur",
+    "Web",
+    "Full",
+    "Stack",
+    "Projet",
+    "Soutenance"
+  ],
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-precomposed.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/mstile-150x150.png",
+      "sizes": "150x150",
+      "type": "image/png"
+    }
+  ],
+  "lang": "fr",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
