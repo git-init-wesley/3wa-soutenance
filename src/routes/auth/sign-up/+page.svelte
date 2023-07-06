@@ -49,7 +49,8 @@
 				<section>
 					<article>
 						<label for='username'><i class='fa fa-tag prep-start'></i>Pseudonyme</label>
-						<input bind:value={username} id='username' name='username' on:change={() => {usernameTouch = true}} required
+						<input bind:value={username} id='username' name='username' on:change={() => {usernameTouch = true}}
+									 placeholder='Pseudonyme' required
 									 type='text' />
 						{#if usernameTouch}
 							<p class='wrong' show={!RegexUsername.test(username)}>
@@ -61,7 +62,8 @@
 				<section>
 					<article>
 						<label for='email'><i class='fa fa-envelope prep-start'></i>Email</label>
-						<input bind:value={email} id='email' name='email' on:change={() => {emailTouch = true}} required
+						<input bind:value={email} id='email' name='email' on:change={() => {emailTouch = true}}
+									 placeholder='test@example.fr' required
 									 type='email' />
 						{#if emailTouch}
 							<p class='wrong' show={!RegexMail.test(email)}>
@@ -73,15 +75,16 @@
 				<section>
 					<article>
 						<label for='password'><i class='fa fa-lock prep-start'></i>Mot de passe</label>
-						<input bind:value={password} id='password' name='password' on:change={() => {passwordTouch = true}} required
+						<input bind:value={password} id='password' name='password' on:change={() => {passwordTouch = true}}
+									 placeholder='••••••••' required
 									 type='password' />
 					</article>
 				</section>
 				<section>
 					<article>
 						<label for='confirm_password'><i class='fa fa-lock prep-start'></i>Confirmation du Mot de passe</label>
-						<input bind:value={confirmPassword} id='confirm_password' name='password'
-									 on:change={() => {confirmPasswordTouch = true}} required type='password' />
+						<input bind:value={confirmPassword} id='confirm_password' name='password' on:change={() => {confirmPasswordTouch = true}}
+									 placeholder='••••••••' required type='password' />
 					</article>
 				</section>
 				<section>
