@@ -89,6 +89,7 @@ export const RegexUsername: RegExp = RegExp('^([a-zA-Z_.0-9]){3,16}$');
 export const RegexTo_09: RegExp = RegExp('(?=[0-9])');
 export const RegexTo_az: RegExp = RegExp('(?=[a-z])');
 export const RegexTo_AZ: RegExp = RegExp('(?=[A-Z])');
+export const RegexTo_aZ: RegExp = RegExp('(?=[a-zA-Z])');
 export const RegexSpecialCharacters: RegExp = RegExp('(?=[@$!%*#?&])');
 export const RegexTo_3_16: RegExp = RegExp('^.{3,16}$');
 export const RegexTo_8_32: RegExp = RegExp('^.{8,32}$');

@@ -8,26 +8,63 @@ import { RegexMail, RegexPassword, RegexUsername, uuid_e4 } from '../../../../li
 import { to_number } from 'svelte/internal';
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ url, fetch }: { url: URL, fetch: any }) {
+export async function GET({ url }: { url: URL }) {
 
-	let username = url.searchParams.get('username');
-	let email = url.searchParams.get('email');
-	let password = url.searchParams.get('password');
+	const username = url.searchParams.get('username');
+	const email = url.searchParams.get('email');
+	const password = url.searchParams.get('password');
 
 	if (!username || !email || !password) throw error(400, { message: 'Error 400 : Bad request' });
 
-	if (!RegexMail.test(email)) throw error(406, { message: 'Error 406 : auth/invalid-email' });
-	if (!RegexUsername.test(username)) throw error(406, { message: 'Error 406 : auth/invalid-username' });
-	if (!RegexPassword.test(password)) throw error(406, { message: 'Error 406 : auth/invalid-password' });
+	if (!RegexMail.test(email))
+		return new Response(JSON.stringify({
+			code: 'auth/invalid-email',
+			message: 'Adresse mail invalide.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/invalid-email'
+		});
+	if (!RegexUsername.test(username))
+		return new Response(JSON.stringify({
+			code: 'auth/invalid-username',
+			message: 'Pseudonyme invalide.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/invalid-username'
+		});
+	if (!RegexPassword.test(password))
+		return new Response(JSON.stringify({
+			code: 'auth/invalid-password',
+			message: 'Mot de passe invalide.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/invalid-password'
+		});
+
+	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
 
 	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 	await mongoServer.init();
 
 	let existsUser = await MUser.exists({ username: username }).exec();
-	if (existsUser !== null) throw error(406, { message: 'Error 406 : auth/username-already-in-use' });
+	if (existsUser !== null)
+		return new Response(JSON.stringify({
+			code: 'auth/username-already-in-use',
+			message: 'Pseudonyme déjà utilisé.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/username-already-in-use'
+		});
 
 	existsUser = await MUser.exists({ email: email }).exec();
-	if (existsUser !== null) throw error(406, { message: 'Error 406 : auth/email-already-in-use' });
+	if (existsUser !== null)
+		return new Response(JSON.stringify({
+			code: 'auth/email-already-in-use',
+			message: 'Adresse mail déjà utilisée.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/email-already-in-use'
+		});
 
 	try {
 		let isoString = new Date().toISOString();
