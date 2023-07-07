@@ -4,16 +4,22 @@
 	import Footer from '../../../libs/components/Footer.svelte';
 	import Header from '../../../libs/components/Header.svelte';
 	import Preloader from '../../../libs/components/Preloader.svelte';
+	import { RegexMail } from '../../../libs/utils/utils';
+	import { checkAuth } from '../../../libs/functions/auth-functions';
+	import { page } from '$app/stores';
 
-	// On mount of the page (when the page is loaded)
+	let loading = true;
+
 	onMount(async () => {
-		// Define the current year
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
-		// Remove the preloader
-		await setTimeout(() => document.querySelector('.preloader').remove(), 300);
+		await setTimeout(async () => {
+			await checkAuth($page.url);
+			loading = false;
+		}, 300);
 	});
 
 	let email = '';
+	let emailTouch = false;
 </script>
 
 <svelte:head>
@@ -21,7 +27,9 @@
 </svelte:head>
 
 <!-- ========================= Preloader Start ========================= -->
-<Preloader></Preloader>
+{#if loading}
+	<Preloader></Preloader>
+{/if}
 <!-- ========================= Preloader End ========================= -->
 
 
@@ -40,7 +48,14 @@
 				<section>
 					<article>
 						<label for='email'><i class='fa fa-envelope prep-start'></i>Email</label>
-						<input bind:value={email} id='email' name='email' required type='email' />
+						<input bind:value={email} id='email' name='email' on:focusout={() => {emailTouch = true}}
+									 placeholder='test@example.fr' required
+									 type='email' />
+						{#if emailTouch}
+							<p class='wrong' show={!RegexMail.test(email)}>
+								<i class='fa fa-circle-exclamation'></i>Adresse mail incorrecte
+							</p>
+						{/if}
 					</article>
 				</section>
 				<button disabled='disabled' type='submit'>Récupérer</button>
