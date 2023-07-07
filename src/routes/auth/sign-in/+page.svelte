@@ -55,7 +55,7 @@
 		url.searchParams.set('password', password);
 		const resp: Response = await fetch(url);
 		if (!resp.ok) {
-			if (resp.status === 406)
+			if (resp.status === 406 || resp.status === 403)
 				errorMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 			else
 				errorMessage = resp.statusText;

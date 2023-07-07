@@ -52,7 +52,7 @@ export async function GET({ url }: { url: URL }) {
 		message: 'Mot de passe incorrect.'
 	}), {
 		status: 403,
-		statusText: 'Error 403 : auth/token-invalid'
+		statusText: 'Error 403 : auth/wrong-password'
 	});
 
 	let newToken = bcrypt.hashSync((user.password + uuid_e4()), to_number(environmentServer.saltRounds));
