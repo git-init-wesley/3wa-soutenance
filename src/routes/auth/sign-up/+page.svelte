@@ -16,17 +16,18 @@
 		RegexUsername
 	} from '../../../libs/utils/utils';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import { checkAuth } from '../../../libs/functions/auth-functions';
 
 	let loading = true;
 	let errorMessage = undefined;
 
-	// On mount of the page (when the page is loaded)
 	onMount(async () => {
-		// Define the current year
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
-		// Remove the preloader
-		//await setTimeout(() => document.querySelector('.preloader').remove(), 300);
-		await setTimeout(() => loading = false, 300);
+		await setTimeout(async () => {
+			await checkAuth($page.url);
+			loading = false;
+		}, 300);
 	});
 
 	let username = '';
@@ -78,13 +79,19 @@
 			loading = false;
 			return;
 		}
-		
+
 		const token: string | null | undefined = (await resp.json()).token;
-		if (!token) throw Error('Token don\'t received.');
-		console.log(token);
+		if (!token) {
+			errorMessage = 'Erreur inconnue.';
+			throw Error('Token don\'t received.');
+		}
 		localStorage.setItem('auth_token', token);
-		loading = false;
+		localStorage.setItem('auth_mail', email);
+
 		//TODO: Redirect
+		await goto('/');
+
+		loading = false;
 	};
 </script>
 
@@ -214,8 +221,8 @@
 				<section>
 					<article>
 						<label for='rgpd'>
-							<input bind:checked={rgpd} id='rgpd' name='rgpd' on:change={() => rgpdTouch = true} type='checkbox' />
-							J'accepte les <a class='missing' href='/rgpd' style='font-size: 0.8rem'>conditions d'utilisation</a>
+							<input bind:checked={rgpd} id='rgpd' name='rgpd' on:change={() => rgpdTouch = true} type='checkbox' />J'accepte
+							les <a class='missing' href='/rgpd' style='font-size: 0.8rem'>conditions d'utilisation</a>
 						</label>
 						{#if rgpdTouch}
 							<p class='wrong' show={!rgpd}>
@@ -225,7 +232,7 @@
 					</article>
 				</section>
 				<button type='submit'>S'inscrire</button>
-				<a class='link' href='/auth/sign-in'>Vous avez déjà un compte ?</a>
+				<a class='link' href='/auth/sign-in'>Vous avez déjà un compte?</a>
 			</form>
 		</article>
 	</section>
