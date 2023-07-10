@@ -1,11 +1,26 @@
 <script lang='ts'>
 	import Preloader from '../../../libs/components/Preloader.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
-	localStorage.removeItem('auth_token');
-	localStorage.removeItem('auth_mail');
+	onMount(async () => {
+		const email = localStorage.getItem('auth_mail');
+		const token = localStorage.getItem('auth_token');
 
-	goto('/').then();
+		if (email && token) {
+			const url: URL = new URL(`${$page.url.origin}/api/auth/sign-in/token/delete`);
+			url.searchParams.set('email', email);
+			url.searchParams.set('token', token);
+			await fetch(url);
+		}
+
+		localStorage.removeItem('auth_token');
+		localStorage.removeItem('auth_mail');
+
+		await goto('/').then();
+	});
+
 </script>
 
 <svelte:head>

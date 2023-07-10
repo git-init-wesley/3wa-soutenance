@@ -31,7 +31,7 @@ export async function GET({ url }: { url: URL }) {
 	let user = await MUser.findOne({ email: email }).exec();
 
 	// noinspection JSDeprecatedSymbols
-	await mongoServer.close()
+	await mongoServer.close();
 
 	if (!user) return new Response(JSON.stringify({
 		code: 'auth/user-does-not-exist',

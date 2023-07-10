@@ -1,20 +1,31 @@
 import { error } from '@sveltejs/kit';
-import { environmentServer } from '../../../../../../environments/environment-server';
-import Mongodb from '../../../../../../libs/mongodb/mongodb';
-import { MUser } from '../../../../../../libs/mongodb/models/users-model';
-import { RegexMail } from '../../../../../../libs/utils/utils';
-import type { UserToken } from '../../../../../../libs/user/user';
+import { RegexMail } from '../../../../../libs/utils/utils';
+import { environmentServer } from '../../../../../environments/environment-server';
+import Mongodb from '../../../../../libs/mongodb/mongodb';
+import { MUser } from '../../../../../libs/mongodb/models/users-model';
+import type { UserToken } from '../../../../../libs/user/user';
+import moment from 'moment/moment';
 import { dev } from '$app/environment';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
 
-	const email = url.searchParams.get('email');
+	const old_email = url.searchParams.get('old_email');
+	const new_email = url.searchParams.get('new_email');
 	const token = url.searchParams.get('token');
 
-	if (!email || !token) throw error(400, { message: 'Error 400 : Bad request' });
+	if (!old_email || !new_email || !token) throw error(400, { message: 'Error 400 : Bad request' });
 
-	if (!RegexMail.test(email))
+	if (old_email === new_email)
+		return new Response(JSON.stringify({
+			code: 'auth/emails-are-same',
+			message: 'Les adresses mail sont les mêmes.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/emails-are-same'
+		});
+
+	if (!RegexMail.test(old_email) || !RegexMail.test(new_email))
 		return new Response(JSON.stringify({
 			code: 'auth/invalid-email',
 			message: 'Adresse mail invalide.'
@@ -28,7 +39,7 @@ export async function GET({ url }: { url: URL }) {
 	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 	await mongoServer.init();
 
-	let user = await MUser.findOne({ email: email }).exec();
+	let user = await MUser.findOne({ email: old_email }).exec();
 
 	if (!user) return new Response(JSON.stringify({
 		code: 'auth/user-does-not-exist',
@@ -47,11 +58,17 @@ export async function GET({ url }: { url: URL }) {
 		statusText: 'Error 403 : auth/token-invalid'
 	});
 
-	let tokens = user.tokens.filter(f => f.token !== token);
-	user.tokens = tokens;
+	if ((moment(new Date()).diff(moment(userToken.created_at)) / 1000 / 60 / 60 / 24) >= 30)
+		return new Response(JSON.stringify({
+			code: 'auth/token-expired',
+			message: 'La clé de sécurité est expirée.'
+		}), {
+			status: 403,
+			statusText: 'Error 403 : auth/token-expired'
+		});
 
 	try {
-		await user.updateOne({ tokens: tokens });
+		await user.updateOne({ email: new_email });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 		return new Response(JSON.stringify({

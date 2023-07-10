@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import Mongodb from '../../../../libs/mongodb/mongodb';
 import { RegexMail, RegexPassword, RegexUsername, uuid_e4 } from '../../../../libs/utils/utils';
 import { to_number } from 'svelte/internal';
+import { dev } from '$app/environment';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
@@ -42,6 +43,7 @@ export async function GET({ url }: { url: URL }) {
 		});
 
 	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
+	if (!environmentServer.saltRounds) throw error(503, { message: 'Error 503 : MISSING_ENV_926VA' });
 
 	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 	await mongoServer.init();
@@ -94,7 +96,7 @@ export async function GET({ url }: { url: URL }) {
 			role: user.role
 		}), { status: 200 });
 	} catch (e: any) {
-		console.log(e);
+		if (dev) console.log(e);
 		throw error(500, { message: JSON.stringify(e.message) });
 	}
 }

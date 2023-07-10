@@ -19,9 +19,16 @@
 		RegexTo_az,
 		RegexUsername
 	} from '../../../libs/utils/utils';
+	import { goto } from '$app/navigation';
 
 	let loading = true;
-	let errorMessage = undefined;
+	let _relaunchHeader = true;
+	let errorUsernameMessage = undefined;
+	let errorEmailMessage = undefined;
+	let errorPasswordMessage = undefined;
+	let successUsernameMessage = undefined;
+	let successEmailMessage = undefined;
+	let successPasswordMessage = undefined;
 
 	let username = undefined, _username = undefined;
 	let email = undefined, _email = undefined;
@@ -51,48 +58,79 @@
 
 	const onSubmit = async (_: Event) => {
 		loading = true;
-		errorMessage = undefined;
+		errorUsernameMessage = undefined;
+		errorEmailMessage = undefined;
+		errorPasswordMessage = undefined;
+		successUsernameMessage = undefined;
+		successEmailMessage = undefined;
+		successPasswordMessage = undefined;
 		usernameTouch = true;
 		emailTouch = true;
 		passwordTouch = true;
 
 		let validate = true;
-		if (!RegexUsername.test(username)) validate = false;
-		if (!RegexMail.test(email)) validate = false;
-		if (password !== undefined && !RegexPassword.test(password)) validate = false;
 
-		if (!validate) {
-			loading = false;
-			return;
+		if (_username !== username) {
+			if (!RegexUsername.test(username)) validate = false;
+			if (validate) {
+				const url: URL = new URL(`${$page.url.origin}/api/u/update/username`);
+				url.searchParams.set('old_username', _username);
+				url.searchParams.set('new_username', username);
+				url.searchParams.set('token', _token);
+				const resp: Response = await fetch(url);
+				if (resp.ok) {
+					_relaunchHeader = !_relaunchHeader;
+					_username = username;
+					successUsernameMessage = 'Changement de pseudonyme pris en compte.';
+				} else {
+					if (resp.status === 406 || resp.status === 403) errorUsernameMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
+					else errorUsernameMessage = resp.statusText;
+				}
+			}
 		}
 
-		/*const url: URL = new URL(`${$page.url.origin}/api/auth/sign-up`);
-		url.searchParams.set('username', username);
-		url.searchParams.set('email', email);
-		url.searchParams.set('password', password);
-		const resp: Response = await fetch(url);
-		if (!resp.ok) {
-			if (resp.status === 406)
-				errorMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
-			else
-				errorMessage = resp.statusText;
+		validate = true;
 
-			loading = false;
-			return;
+		if (_email !== email) {
+			if (!RegexMail.test(email)) validate = false;
+			if (validate) {
+				const url: URL = new URL(`${$page.url.origin}/api/u/update/email`);
+				url.searchParams.set('old_email', _email);
+				url.searchParams.set('new_email', email);
+				url.searchParams.set('token', _token);
+				const resp: Response = await fetch(url);
+				if (resp.ok) {
+					localStorage.setItem('auth_mail', email);
+					_email = email;
+					successEmailMessage = 'Changement d\'adresse mail pris en compte.';
+				} else {
+					if (resp.status === 406 || resp.status === 403) errorEmailMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
+					else errorEmailMessage = resp.statusText;
+				}
+			}
 		}
 
-		const token: string | null | undefined = (await resp.json()).token;
-		if (!token) {
-			errorMessage = 'Erreur inconnue.';
-			throw Error('Token don\'t received.');
+		validate = true;
+
+		if (password !== undefined) {
+			if (!RegexPassword.test(password)) validate = false;
+			if (validate) {
+				const url: URL = new URL(`${$page.url.origin}/api/u/update/password`);
+				url.searchParams.set('email', _email);
+				url.searchParams.set('new_password', password);
+				url.searchParams.set('token', _token);
+				const resp: Response = await fetch(url);
+				if (resp.ok) {
+					password = undefined;
+					successPasswordMessage = 'Changement de mot de passe pris en compte.';
+				} else {
+					if (resp.status === 406 || resp.status === 403) errorPasswordMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
+					else errorPasswordMessage = resp.statusText;
+				}
+			}
 		}
-		localStorage.setItem('auth_token', token);
-		localStorage.setItem('auth_mail', email);
 
-		//TODO: Redirect
-		await goto('/');
-
-		loading = false;*/
+		loading = false;
 	};
 
 	const deleteToken = async (token: string) => {
@@ -102,6 +140,7 @@
 		url.searchParams.set('token', token);
 		await fetch(url);
 		user.tokens = user.tokens.filter(f => f.token !== token);
+		if (token === _token) await goto('/');
 		loading = false;
 	};
 
@@ -120,7 +159,11 @@
 
 
 <!-- ========================= Header Start ========================= -->
-<Header></Header>
+{#if _relaunchHeader}
+	<Header></Header>
+{:else}
+	<Header></Header>
+{/if}
 <!-- ========================= Header End ========================= -->
 
 <main>
@@ -129,8 +172,23 @@
 		<article>
 			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
 			<h1>Profil</h1>
-			{#if errorMessage}
-				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
+			{#if errorUsernameMessage}
+				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorUsernameMessage}</h2>
+			{/if}
+			{#if successUsernameMessage}
+				<h2 class='check'><i class='fa fa-circle-check'></i>{successUsernameMessage}</h2>
+			{/if}
+			{#if errorEmailMessage}
+				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorEmailMessage}</h2>
+			{/if}
+			{#if successEmailMessage}
+				<h2 class='check'><i class='fa fa-circle-check'></i>{successEmailMessage}</h2>
+			{/if}
+			{#if errorPasswordMessage}
+				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorPasswordMessage}</h2>
+			{/if}
+			{#if successPasswordMessage}
+				<h2 class='check'><i class='fa fa-circle-check'></i>{successPasswordMessage}</h2>
 			{/if}
 			<form on:submit|preventDefault={onSubmit}>
 				<section>
@@ -186,7 +244,7 @@
 						<input bind:value={password} id='password' name='password'
 									 on:focusin={() => {passwordTooltips = true}}
 									 on:focusout={() => {passwordTouch = true; passwordTooltips = false }}
-									 placeholder='••••••••' required
+									 placeholder='••••••••'
 									 type='password' />
 						{#if passwordTouch && !!password}
 							<p class='wrong' show={!RegexPassword.test(password)}>
@@ -222,7 +280,9 @@
 						</p>
 					</article>
 				</section>
-				<button disabled={_username !== username || _email !== email ? undefined : 'disabled'} type='submit'>
+				<button
+					disabled={_username !== username || _email !== email || password !== undefined	 ? undefined : 'disabled'}
+					type='submit'>
 					Enregistrer
 				</button>
 			</form>
@@ -234,17 +294,16 @@
 	<section class='sessions container' style='margin-top: 1.5rem'>
 		<article>
 			<h1>Sessions</h1>
-
 			{#if user?.tokens}
 				{#each user?.tokens as token, i}
-					<section class='session' on:click={() => deleteToken(token.token)}>
+					<section class='session'>
 						<article>
 							{#if _token === token.token}
-								<a class='success link our-session'>
+								<a class='success link our-session' href={undefined} on:click={() => deleteToken(token.token)}>
 									<i class='fa fa-circle'></i>Votre session
 								</a>
 							{:else}
-								<a class='link'>
+								<a class='link' href={undefined} on:click={() => deleteToken(token.token)}>
 									<i class='fa fa-xmark'></i>Fermer la session
 								</a>
 							{/if}

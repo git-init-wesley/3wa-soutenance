@@ -1,19 +1,22 @@
 import { error } from '@sveltejs/kit';
-import { MUser } from '../../../../../libs/mongodb/models/users-model';
-import * as bcrypt from 'bcrypt';
+import { RegexMail, RegexPassword } from '../../../../../libs/utils/utils';
 import { environmentServer } from '../../../../../environments/environment-server';
 import Mongodb from '../../../../../libs/mongodb/mongodb';
-import { RegexMail, RegexPassword, uuid_e4 } from '../../../../../libs/utils/utils';
-import { to_number } from 'svelte/internal';
+import { MUser } from '../../../../../libs/mongodb/models/users-model';
+import type { UserToken } from '../../../../../libs/user/user';
+import moment from 'moment/moment';
 import { dev } from '$app/environment';
+import * as bcrypt from 'bcrypt';
+import { to_number } from 'svelte/internal';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
 
 	const email = url.searchParams.get('email');
-	const password = url.searchParams.get('password');
+	const new_password = url.searchParams.get('new_password');
+	const token = url.searchParams.get('token');
 
-	if (!email || !password) throw error(400, { message: 'Error 400 : Bad request' });
+	if (!email || !new_password || !token) throw error(400, { message: 'Error 400 : Bad request' });
 
 	if (!RegexMail.test(email))
 		return new Response(JSON.stringify({
@@ -24,7 +27,7 @@ export async function GET({ url }: { url: URL }) {
 			statusText: 'Error 406 : auth/invalid-email'
 		});
 
-	if (!RegexPassword.test(password))
+	if (!RegexPassword.test(new_password))
 		return new Response(JSON.stringify({
 			code: 'auth/invalid-password',
 			message: 'Mot de passe invalide.'
@@ -49,30 +52,31 @@ export async function GET({ url }: { url: URL }) {
 		statusText: 'Error 406 : auth/user-does-not-exist'
 	});
 
-	if (!bcrypt.compareSync(password, user.password)) return new Response(JSON.stringify({
-		code: 'auth/wrong-password',
-		message: 'Mot de passe incorrect.'
+	let userToken: UserToken | undefined = user.tokens.find(s => s.token === token);
+	if (!userToken) return new Response(JSON.stringify({
+		code: 'auth/token-invalid',
+		message: 'La clé de sécurité est invalide.'
 	}), {
 		status: 403,
-		statusText: 'Error 403 : auth/wrong-password'
+		statusText: 'Error 403 : auth/token-invalid'
 	});
 
-	let newToken = bcrypt.hashSync((user.password + uuid_e4()), to_number(environmentServer.saltRounds));
-
-	let tokens = user.tokens;
-	tokens.push({
-		token: newToken,
-		created_at: new Date().toISOString()
-	});
-
-	user.tokens = tokens;
+	if ((moment(new Date()).diff(moment(userToken.created_at)) / 1000 / 60 / 60 / 24) >= 30)
+		return new Response(JSON.stringify({
+			code: 'auth/token-expired',
+			message: 'La clé de sécurité est expirée.'
+		}), {
+			status: 403,
+			statusText: 'Error 403 : auth/token-expired'
+		});
 
 	try {
-		await user.updateOne({ tokens: tokens });
+		let hash = bcrypt.hashSync(new_password, to_number(environmentServer.saltRounds));
+		await user.updateOne({ password: hash });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 		return new Response(JSON.stringify({
-			token: newToken, username: user.username,
+			username: user.username,
 			tokens: user.tokens,
 			role: user.role
 		}), { status: 200 });
