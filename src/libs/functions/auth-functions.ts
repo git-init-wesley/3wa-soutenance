@@ -1,9 +1,10 @@
 import { goto } from '$app/navigation';
+import type { UserToken } from '../user/user';
 
 export const checkAuth = async ($url: URL) => {
 	const auth_token = localStorage.getItem('auth_token');
 	const auth_mail = localStorage.getItem('auth_mail');
-	if ($url.pathname.startsWith?.('/api') === true) return false;
+	if ($url.pathname.startsWith?.('/api') === true) return undefined;
 
 	const url: URL = new URL(`${$url.origin}/api/auth/sign-in/token`);
 	url.searchParams.set('email', auth_mail ?? '');
@@ -11,10 +12,17 @@ export const checkAuth = async ($url: URL) => {
 	const resp: Response = await fetch(url);
 
 	if ($url.pathname.startsWith?.('/auth') === true) {
-		if (resp.ok) return goto('/');
+		if (resp.ok) {
+			await goto('/');
+			return undefined;
+		}
 	} else if ($url.pathname.startsWith?.('/u')) {
-		if (!resp.ok) return goto('/');
+		if (!resp.ok) {
+			await goto('/');
+			return undefined;
+		}
 	}
 
-	return resp.ok;
+	if (!resp.ok) return undefined;
+	else return (await resp.json()) as { username: string, role: string, tokens: UserToken[], token: string };
 };

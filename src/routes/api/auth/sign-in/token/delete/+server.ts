@@ -1,10 +1,9 @@
 import { error } from '@sveltejs/kit';
-import { MUser } from '../../../../../libs/mongodb/models/users-model';
-import type { UserToken } from '../../../../../libs/user/user';
-import { environmentServer } from '../../../../../environments/environment-server';
-import Mongodb from '../../../../../libs/mongodb/mongodb';
-import { RegexMail } from '../../../../../libs/utils/utils';
-import moment from 'moment';
+import { environmentServer } from '../../../../../../environments/environment-server';
+import Mongodb from '../../../../../../libs/mongodb/mongodb';
+import { MUser } from '../../../../../../libs/mongodb/models/users-model';
+import { RegexMail } from '../../../../../../libs/utils/utils';
+import type { UserToken } from '../../../../../../libs/user/user';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
@@ -30,9 +29,6 @@ export async function GET({ url }: { url: URL }) {
 
 	let user = await MUser.findOne({ email: email }).exec();
 
-	// noinspection JSDeprecatedSymbols
-	await mongoServer.close()
-
 	if (!user) return new Response(JSON.stringify({
 		code: 'auth/user-does-not-exist',
 		message: 'L\'utilisateur n\'existe pas.'
@@ -50,23 +46,20 @@ export async function GET({ url }: { url: URL }) {
 		statusText: 'Error 403 : auth/token-invalid'
 	});
 
-	let today = new Date();
-	let diff_date = moment(today).diff(moment(userToken.created_at));
-	let nbr_days = diff_date / 1000 / 60 / 60 / 24;
+	let tokens = user.tokens.filter(f => f.token !== token);
+	user.tokens = tokens;
 
-	if (nbr_days < 30)
+	try {
+		await user.updateOne({ tokens: tokens });
+		// noinspection JSDeprecatedSymbols
+		await mongoServer.close();
 		return new Response(JSON.stringify({
-			token: token,
 			username: user.username,
 			tokens: user.tokens,
 			role: user.role
 		}), { status: 200 });
-	else
-		return new Response(JSON.stringify({
-			code: 'auth/token-expired',
-			message: 'La clé de sécurité est expirée.'
-		}), {
-			status: 403,
-			statusText: 'Error 403 : auth/token-expired'
-		});
+	} catch (e: any) {
+		console.log(e);
+		throw error(500, { message: JSON.stringify(e.message) });
+	}
 }

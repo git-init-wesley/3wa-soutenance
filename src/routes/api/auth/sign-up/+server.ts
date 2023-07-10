@@ -70,7 +70,7 @@ export async function GET({ url }: { url: URL }) {
 		let isoString = new Date().toISOString();
 		let hash = bcrypt.hashSync(password, to_number(environmentServer.saltRounds));
 		let firstToken = bcrypt.hashSync((hash + uuid_e4()), to_number(environmentServer.saltRounds));
-		await new MUser({
+		const user = new MUser({
 			username: username,
 			email: email,
 			password: hash,
@@ -83,11 +83,15 @@ export async function GET({ url }: { url: URL }) {
 					created_at: isoString
 				}
 			]
-		}).save();
+		});
+		await user.save();
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 		return new Response(JSON.stringify({
-			token: firstToken
+			token: firstToken,
+			username: user.username,
+			tokens: user.tokens,
+			role: user.role
 		}), { status: 200 });
 	} catch (e: any) {
 		console.log(e);

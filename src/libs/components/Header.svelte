@@ -7,10 +7,12 @@
 
 	let loading = true;
 	let logged = false;
+	let user = undefined;
 
 	onMount(async () => {
 		actualPathName = window.location.pathname;
-		logged = await checkAuth($page.url) === true;
+		user = await checkAuth($page.url);
+		logged = user !== undefined;
 		loading = false;
 	});
 </script>
@@ -33,7 +35,7 @@
 					{#if logged}
 						<a class={actualPathName === '/u/task' ? 'actual' : ''} href='/u/task'>Tâches</a>
 						<a class={actualPathName === '/u/profile' ? 'actual' : ''} href='/u/profile'>
-							<i class='fa fa-user'></i>
+							{user.username} <i class='fa fa-user'></i>
 						</a>
 						<a class={actualPathName === '/u/logout' ? 'actual' : ''} href='/u/logout'>
 							<i class='fa-solid fa-arrow-right-from-bracket'></i>

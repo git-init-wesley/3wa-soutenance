@@ -69,7 +69,11 @@ export async function GET({ url }: { url: URL }) {
 		await user.updateOne({ tokens: tokens });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
-		return new Response(JSON.stringify({ token: newToken }), { status: 200 });
+		return new Response(JSON.stringify({
+			token: newToken, username: user.username,
+			tokens: user.tokens,
+			role: user.role
+		}), { status: 200 });
 	} catch (e: any) {
 		console.log(e);
 		throw error(500, { message: JSON.stringify(e.message) });
