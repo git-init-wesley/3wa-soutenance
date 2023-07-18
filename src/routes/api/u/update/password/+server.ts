@@ -72,13 +72,17 @@ export async function GET({ url }: { url: URL }) {
 
 	try {
 		let hash = bcrypt.hashSync(new_password, to_number(environmentServer.saltRounds));
-		await user.updateOne({ password: hash });
+		const updated_at = new Date().toISOString();
+		user.updated_at = updated_at;
+		await user.updateOne({ password: hash, updated_at: updated_at });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 		return new Response(JSON.stringify({
 			username: user.username,
 			tokens: user.tokens,
-			role: user.role
+			role: user.role,
+			created_at: user.created_at,
+			updated_at: updated_at
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);

@@ -82,6 +82,7 @@
 					_relaunchHeader = !_relaunchHeader;
 					_username = username;
 					successUsernameMessage = 'Changement de pseudonyme pris en compte.';
+					user = await resp.json();
 				} else {
 					if (resp.status === 406 || resp.status === 403) errorUsernameMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 					else errorUsernameMessage = resp.statusText;
@@ -103,6 +104,7 @@
 					localStorage.setItem('auth_mail', email);
 					_email = email;
 					successEmailMessage = 'Changement d\'adresse mail pris en compte.';
+					user = await resp.json();
 				} else {
 					if (resp.status === 406 || resp.status === 403) errorEmailMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 					else errorEmailMessage = resp.statusText;
@@ -123,6 +125,7 @@
 				if (resp.ok) {
 					password = undefined;
 					successPasswordMessage = 'Changement de mot de passe pris en compte.';
+					user = await resp.json();
 				} else {
 					if (resp.status === 406 || resp.status === 403) errorPasswordMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 					else errorPasswordMessage = resp.statusText;
@@ -286,6 +289,9 @@
 					Enregistrer
 				</button>
 			</form>
+			<h6 class='small-date'>Dernière mise à jour
+				le {moment(new Date(user?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
+			<h6 class='small-date'>Compte crée le {moment(new Date(user?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
 		</article>
 	</section>
 	<!-- ========================= Forms End ========================= -->

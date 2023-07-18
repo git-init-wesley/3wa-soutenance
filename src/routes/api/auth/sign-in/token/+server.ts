@@ -59,7 +59,9 @@ export async function GET({ url }: { url: URL }) {
 			token: token,
 			username: user.username,
 			tokens: user.tokens,
-			role: user.role
+			role: user.role,
+			created_at: user.created_at,
+			updated_at: user.updated_at
 		}), { status: 200 });
 	else
 		return new Response(JSON.stringify({

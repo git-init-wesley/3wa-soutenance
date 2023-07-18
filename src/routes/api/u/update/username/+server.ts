@@ -68,13 +68,17 @@ export async function GET({ url }: { url: URL }) {
 		});
 
 	try {
-		await user.updateOne({ username: new_username });
+		const updated_at = new Date().toISOString();
+		user.updated_at = updated_at;
+		await user.updateOne({ username: new_username, updated_at: updated_at });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 		return new Response(JSON.stringify({
 			username: new_username,
 			tokens: user.tokens,
-			role: user.role
+			role: user.role,
+			created_at: user.created_at,
+			updated_at: updated_at
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);
