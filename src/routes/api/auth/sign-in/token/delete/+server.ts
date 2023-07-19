@@ -25,32 +25,32 @@ export async function GET({ url }: { url: URL }) {
 
 	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
 
-	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
-	await mongoServer.init();
-
-	let user = await MUser.findOne({ email: email }).exec();
-
-	if (!user) return new Response(JSON.stringify({
-		code: 'auth/user-does-not-exist',
-		message: 'L\'utilisateur n\'existe pas.'
-	}), {
-		status: 406,
-		statusText: 'Error 406 : auth/user-does-not-exist'
-	});
-
-	let userToken: UserToken | undefined = user.tokens.find(s => s.token === token);
-	if (!userToken) return new Response(JSON.stringify({
-		code: 'auth/token-invalid',
-		message: 'La clé de sécurité est invalide.'
-	}), {
-		status: 403,
-		statusText: 'Error 403 : auth/token-invalid'
-	});
-
-	let tokens = user.tokens.filter(f => f.token !== token);
-	user.tokens = tokens;
-
 	try {
+		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
+		await mongoServer.init();
+
+		let user = await MUser.findOne({ email: email }).exec();
+
+		if (!user) return new Response(JSON.stringify({
+			code: 'auth/user-does-not-exist',
+			message: 'L\'utilisateur n\'existe pas.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/user-does-not-exist'
+		});
+
+		let userToken: UserToken | undefined = user.tokens.find(s => s.token === token);
+		if (!userToken) return new Response(JSON.stringify({
+			code: 'auth/token-invalid',
+			message: 'La clé de sécurité est invalide.'
+		}), {
+			status: 403,
+			statusText: 'Error 403 : auth/token-invalid'
+		});
+
+		let tokens = user.tokens.filter(f => f.token !== token);
+		user.tokens = tokens;
+
 		await user.updateOne({ tokens: tokens });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();

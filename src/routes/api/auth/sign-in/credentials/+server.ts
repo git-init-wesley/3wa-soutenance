@@ -36,38 +36,38 @@ export async function GET({ url }: { url: URL }) {
 	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
 	if (!environmentServer.saltRounds) throw error(503, { message: 'Error 503 : MISSING_ENV_926VA' });
 
-	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
-	await mongoServer.init();
-
-	let user = await MUser.findOne({ email: email }).exec();
-
-	if (!user) return new Response(JSON.stringify({
-		code: 'auth/user-does-not-exist',
-		message: 'L\'utilisateur n\'existe pas.'
-	}), {
-		status: 406,
-		statusText: 'Error 406 : auth/user-does-not-exist'
-	});
-
-	if (!bcrypt.compareSync(password, user.password)) return new Response(JSON.stringify({
-		code: 'auth/wrong-password',
-		message: 'Mot de passe incorrect.'
-	}), {
-		status: 403,
-		statusText: 'Error 403 : auth/wrong-password'
-	});
-
-	let newToken = bcrypt.hashSync((user.password + uuid_e4()), to_number(environmentServer.saltRounds));
-
-	let tokens = user.tokens;
-	tokens.push({
-		token: newToken,
-		created_at: new Date().toISOString()
-	});
-
-	user.tokens = tokens;
-
 	try {
+		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
+		await mongoServer.init();
+
+		let user = await MUser.findOne({ email: email }).exec();
+
+		if (!user) return new Response(JSON.stringify({
+			code: 'auth/user-does-not-exist',
+			message: 'L\'utilisateur n\'existe pas.'
+		}), {
+			status: 406,
+			statusText: 'Error 406 : auth/user-does-not-exist'
+		});
+
+		if (!bcrypt.compareSync(password, user.password)) return new Response(JSON.stringify({
+			code: 'auth/wrong-password',
+			message: 'Mot de passe incorrect.'
+		}), {
+			status: 403,
+			statusText: 'Error 403 : auth/wrong-password'
+		});
+
+		let newToken = bcrypt.hashSync((user.password + uuid_e4()), to_number(environmentServer.saltRounds));
+
+		let tokens = user.tokens;
+		tokens.push({
+			token: newToken,
+			created_at: new Date().toISOString()
+		});
+
+		user.tokens = tokens;
+
 		await user.updateOne({ tokens: tokens });
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();

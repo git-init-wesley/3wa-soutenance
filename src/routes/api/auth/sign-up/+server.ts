@@ -45,30 +45,30 @@ export async function GET({ url }: { url: URL }) {
 	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
 	if (!environmentServer.saltRounds) throw error(503, { message: 'Error 503 : MISSING_ENV_926VA' });
 
-	const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
-	await mongoServer.init();
-
-	let existsUser = await MUser.exists({ username: username }).exec();
-	if (existsUser !== null)
-		return new Response(JSON.stringify({
-			code: 'auth/username-already-in-use',
-			message: 'Pseudonyme déjà utilisé.'
-		}), {
-			status: 406,
-			statusText: 'Error 406 : auth/username-already-in-use'
-		});
-
-	existsUser = await MUser.exists({ email: email }).exec();
-	if (existsUser !== null)
-		return new Response(JSON.stringify({
-			code: 'auth/email-already-in-use',
-			message: 'Adresse mail déjà utilisée.'
-		}), {
-			status: 406,
-			statusText: 'Error 406 : auth/email-already-in-use'
-		});
-
 	try {
+		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
+		await mongoServer.init();
+
+		let existsUser = await MUser.exists({ username: username }).exec();
+		if (existsUser !== null)
+			return new Response(JSON.stringify({
+				code: 'auth/username-already-in-use',
+				message: 'Pseudonyme déjà utilisé.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : auth/username-already-in-use'
+			});
+
+		existsUser = await MUser.exists({ email: email }).exec();
+		if (existsUser !== null)
+			return new Response(JSON.stringify({
+				code: 'auth/email-already-in-use',
+				message: 'Adresse mail déjà utilisée.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : auth/email-already-in-use'
+			});
+
 		let isoString = new Date().toISOString();
 		let hash = bcrypt.hashSync(password, to_number(environmentServer.saltRounds));
 		let firstToken = bcrypt.hashSync((hash + uuid_e4()), to_number(environmentServer.saltRounds));

@@ -1,37 +1,32 @@
 import { error } from '@sveltejs/kit';
-import { RegexUsername } from '../../../../../libs/utils/utils';
-import { environmentServer } from '../../../../../environments/environment-server';
-import Mongodb from '../../../../../libs/mongodb/mongodb';
-import { MUser } from '../../../../../libs/mongodb/models/users-model';
-import type { UserToken } from '../../../../../libs/user/user';
 import moment from 'moment/moment';
+import { RegexMail } from '../../../../libs/utils/utils';
+import { environmentServer } from '../../../../environments/environment-server';
+import Mongodb from '../../../../libs/mongodb/mongodb';
+import { MUser } from '../../../../libs/mongodb/models/users-model';
+import type { UserToken } from '../../../../libs/user/user';
+import { MTask } from '../../../../libs/mongodb/models/tasks-model';
 import { dev } from '$app/environment';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
 
-	const old_username = url.searchParams.get('old_username');
-	const new_username = url.searchParams.get('new_username');
+	const email = url.searchParams.get('email');
 	const token = url.searchParams.get('token');
 
-	if (!old_username || !new_username || !token) throw error(400, { message: 'Error 400 : Bad request' });
+	const title = url.searchParams.get('title');
+	const description = url.searchParams.get('description');
+	const content = url.searchParams.get('content');
 
-	if (old_username === new_username)
+	if (!email || !token || !title || !description || !content) throw error(400, { message: 'Error 400 : Bad request' });
+
+	if (!RegexMail.test(email))
 		return new Response(JSON.stringify({
-			code: 'auth/usernames-are-same',
-			message: 'Les pseudonymes sont les mêmes.'
+			code: 'auth/invalid-email',
+			message: 'Adresse mail invalide.'
 		}), {
 			status: 406,
-			statusText: 'Error 406 : auth/usernames-are-same'
-		});
-
-	if (!RegexUsername.test(old_username) || !RegexUsername.test(new_username))
-		return new Response(JSON.stringify({
-			code: 'auth/invalid-username',
-			message: 'Pseudonyme invalide.'
-		}), {
-			status: 406,
-			statusText: 'Error 406 : auth/invalid-username'
+			statusText: 'Error 406 : auth/invalid-email'
 		});
 
 	if (!environmentServer.mongoUri) throw error(503, { message: 'Error 503 : MISSING_ENV_295XM' });
@@ -40,7 +35,7 @@ export async function GET({ url }: { url: URL }) {
 		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 		await mongoServer.init();
 
-		let user = await MUser.findOne({ username: old_username }).exec();
+		let user = await MUser.findOne({ email: email }).exec();
 
 		if (!user) return new Response(JSON.stringify({
 			code: 'auth/user-does-not-exist',
@@ -68,17 +63,25 @@ export async function GET({ url }: { url: URL }) {
 				statusText: 'Error 403 : auth/token-expired'
 			});
 
-		const updated_at = new Date().toISOString();
-		user.updated_at = updated_at;
-		await user.updateOne({ username: new_username, updated_at: updated_at });
-		// noinspection JSDeprecatedSymbols
-		await mongoServer.close();
+		const date = new Date().toISOString();
+
+		const task = new MTask({
+			owner_uid: user._id,
+			created_at: date,
+			updated_at: date,
+			title: title,
+			description: description,
+			content: content
+		});
+
+		await task.save();
+
 		return new Response(JSON.stringify({
-			username: new_username,
-			tokens: user.tokens,
-			role: user.role,
-			created_at: user.created_at,
-			updated_at: updated_at
+			created_at: date,
+			updated_at: date,
+			title: title,
+			description: description,
+			content: content
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);
