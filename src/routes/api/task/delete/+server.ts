@@ -7,6 +7,7 @@ import { MUser } from '../../../../libs/mongodb/models/users-model';
 import type { UserToken } from '../../../../libs/user/user';
 import { MTask } from '../../../../libs/mongodb/models/tasks-model';
 import { dev } from '$app/environment';
+import { Types } from 'mongoose';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }: { url: URL }) {
@@ -14,11 +15,9 @@ export async function GET({ url }: { url: URL }) {
 	const email = url.searchParams.get('email');
 	const token = url.searchParams.get('token');
 
-	const title = url.searchParams.get('title');
-	const description = url.searchParams.get('description');
-	const content = url.searchParams.get('content');
+	const task_id = url.searchParams.get('task_id');
 
-	if (!email || !token || !title) throw error(400, { message: 'Error 400 : Bad request' });
+	if (!email || !token || !task_id) throw error(400, { message: 'Error 400 : Bad request' });
 
 	if (!RegexMail.test(email))
 		return new Response(JSON.stringify({
@@ -63,29 +62,39 @@ export async function GET({ url }: { url: URL }) {
 				statusText: 'Error 403 : auth/token-expired'
 			});
 
-		const date = new Date().toISOString();
+		const task = await MTask.findById(new Types.ObjectId(task_id));
 
-		const task = new MTask({
-			owner_uid: user._id,
-			created_at: date,
-			updated_at: date,
-			title: title,
-			description: description,
-			content: content
-		});
+		if (!task) {
+			// noinspection JSDeprecatedSymbols
+			await mongoServer.close();
+			return new Response(JSON.stringify({
+				code: 'task/task-does-not-exist',
+				message: 'La tâche n\'existe pas.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : task/task-does-not-exist'
+			});
+		}
 
-		await task.save();
+		if (task.owner_uid.toHexString() !== user._id.toHexString()) {
+			// noinspection JSDeprecatedSymbols
+			await mongoServer.close();
+			return new Response(JSON.stringify({
+				code: 'task/task-user-does-not-access',
+				message: 'L\'utilisateur n\'a pas accès à cette tâche.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : task/task-user-does-not-access'
+			});
+		}
+
+		await task.deleteOne();
 
 		// noinspection JSDeprecatedSymbols
-		await mongoServer.close()
+		await mongoServer.close();
 
 		return new Response(JSON.stringify({
-			id: task._id.toHexString(),
-			created_at: date,
-			updated_at: date,
-			title: title,
-			description: description,
-			content: content
+			id: task._id.toHexString()
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);

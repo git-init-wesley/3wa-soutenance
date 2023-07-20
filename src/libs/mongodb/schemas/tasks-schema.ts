@@ -7,5 +7,5 @@ export const STask: Schema<Task> = new Schema<Task>({
 	content: { required: false, type: Schema.Types.String },
 	created_at: { required: false, type: Schema.Types.Date },
 	updated_at: { required: false, type: Schema.Types.Date },
-	owner_uid: { required: false, type: Schema.Types.UUID }
+	owner_uid: { required: false, type: Schema.Types.ObjectId }
 });

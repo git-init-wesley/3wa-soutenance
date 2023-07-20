@@ -1,11 +1,11 @@
 import { error } from '@sveltejs/kit';
 import moment from 'moment/moment';
-import { RegexMail } from '../../../../libs/utils/utils';
-import { environmentServer } from '../../../../environments/environment-server';
-import Mongodb from '../../../../libs/mongodb/mongodb';
-import { MUser } from '../../../../libs/mongodb/models/users-model';
-import type { UserToken } from '../../../../libs/user/user';
-import { MTask } from '../../../../libs/mongodb/models/tasks-model';
+import { RegexMail } from '../../../../../libs/utils/utils';
+import { environmentServer } from '../../../../../environments/environment-server';
+import Mongodb from '../../../../../libs/mongodb/mongodb';
+import { MUser } from '../../../../../libs/mongodb/models/users-model';
+import type { UserToken } from '../../../../../libs/user/user';
+import { MTask } from '../../../../../libs/mongodb/models/tasks-model';
 import { dev } from '$app/environment';
 
 /** @type {import('./$types').RequestHandler} */
@@ -14,11 +14,7 @@ export async function GET({ url }: { url: URL }) {
 	const email = url.searchParams.get('email');
 	const token = url.searchParams.get('token');
 
-	const title = url.searchParams.get('title');
-	const description = url.searchParams.get('description');
-	const content = url.searchParams.get('content');
-
-	if (!email || !token || !title) throw error(400, { message: 'Error 400 : Bad request' });
+	if (!email || !token) throw error(400, { message: 'Error 400 : Bad request' });
 
 	if (!RegexMail.test(email))
 		return new Response(JSON.stringify({
@@ -63,29 +59,26 @@ export async function GET({ url }: { url: URL }) {
 				statusText: 'Error 403 : auth/token-expired'
 			});
 
-		const date = new Date().toISOString();
-
-		const task = new MTask({
-			owner_uid: user._id,
-			created_at: date,
-			updated_at: date,
-			title: title,
-			description: description,
-			content: content
-		});
-
-		await task.save();
+		const tasks = await MTask.find({ owner_uid: user._id });
 
 		// noinspection JSDeprecatedSymbols
-		await mongoServer.close()
+		await mongoServer.close();
+
+		if (!tasks) return new Response(JSON.stringify({
+			tasks: [],
+			count: 0
+		}), { status: 200 });
 
 		return new Response(JSON.stringify({
-			id: task._id.toHexString(),
-			created_at: date,
-			updated_at: date,
-			title: title,
-			description: description,
-			content: content
+			tasks: tasks.map(task => ({
+				id: task._id.toHexString(),
+				created_at: task.created_at,
+				updated_at: task.updated_at,
+				title: task.title,
+				description: task.description,
+				content: task.content
+			})),
+			count: tasks.length
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);

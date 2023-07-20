@@ -1,4 +1,4 @@
-import type { Schema } from 'mongoose';
+import type { Types } from 'mongoose';
 
 export class Task {
 
@@ -10,10 +10,10 @@ export class Task {
 	//Basic
 	created_at: Date | string;
 	updated_at: Date | string;
-	owner_uid: Schema.Types.UUID;
+	owner_uid: Types.ObjectId;
 
 
-	constructor(title: string, description: string | undefined, content: string | undefined, created_at: Date | string, updated_at: Date | string, owner_uid: Schema.Types.UUID) {
+	constructor(title: string, description: string | undefined, content: string | undefined, created_at: Date | string, updated_at: Date | string, owner_uid: Types.ObjectId) {
 		this.title = title;
 		this.description = description;
 		this.content = content;
