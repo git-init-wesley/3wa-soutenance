@@ -25,8 +25,8 @@
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
-			_email = localStorage.getItem('_email');
-			_token = localStorage.getItem('_token');
+			_email = localStorage.getItem('auth_email');
+			_token = localStorage.getItem('auth_token');
 			loading = false;
 		}, 10);
 	});

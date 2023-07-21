@@ -27,8 +27,8 @@
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
-			_email = localStorage.getItem('_email');
-			_token = localStorage.getItem('_token');
+			_email = localStorage.getItem('auth_email');
+			_token = localStorage.getItem('auth_token');
 			//
 			const url: URL = new URL(`${$page.url.origin}/api/task/read`);
 			url.searchParams.set('email', _email ?? '');

@@ -69,8 +69,8 @@
 			errorMessage = 'Erreur inconnue.';
 			throw Error('Token don\'t received.');
 		}
-		localStorage.setItem('_token', token);
-		localStorage.setItem('_email', email);
+		localStorage.setItem('auth_token', token);
+		localStorage.setItem('auth_email', email);
 
 		//TODO: Redirect
 		await goto('/');

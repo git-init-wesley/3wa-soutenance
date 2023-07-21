@@ -17,7 +17,7 @@
 
 	onMount(async () => {
 		_token = localStorage.getItem('auth_token');
-		_email = localStorage.getItem('auth_mail');
+		_email = localStorage.getItem('auth_email');
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);

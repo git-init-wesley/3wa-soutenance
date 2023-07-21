@@ -2,8 +2,8 @@ import { goto } from '$app/navigation';
 import type { UserToken } from '../user/user';
 
 export const checkAuth = async ($url: URL) => {
-	const auth_token = localStorage.getItem('_token');
-	const auth_mail = localStorage.getItem('_email');
+	const auth_token = localStorage.getItem('auth_token');
+	const auth_mail = localStorage.getItem('auth_email');
 	if ($url.pathname.startsWith?.('/api') === true) return undefined;
 
 	const url: URL = new URL(`${$url.origin}/api/auth/sign-in/token`);

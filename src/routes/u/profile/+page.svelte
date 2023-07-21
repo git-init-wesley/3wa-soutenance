@@ -42,9 +42,9 @@
 			user = await checkAuth($page.url);
 			username = user?.username;
 			_username = username;
-			email = localStorage.getItem('_email');
+			email = localStorage.getItem('auth_email');
 			_email = email;
-			_token = localStorage.getItem('_token');
+			_token = localStorage.getItem('auth_token');
 			loading = false;
 		}, 10);
 	});
@@ -101,7 +101,7 @@
 				url.searchParams.set('token', _token);
 				const resp: Response = await fetch(url);
 				if (resp.ok) {
-					localStorage.setItem('_email', email);
+					localStorage.setItem('auth_email', email);
 					_email = email;
 					successEmailMessage = 'Changement d\'adresse mail pris en compte.';
 					user = await resp.json();
