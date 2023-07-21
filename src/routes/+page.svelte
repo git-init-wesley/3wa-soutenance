@@ -9,7 +9,7 @@
 		// Define the current year
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		// Remove the preloader
-		await setTimeout(() => document.querySelector('.preloader').remove(), 300);
+		await setTimeout(() => document.querySelector('.preloader').remove(), 10);
 	});
 </script>
 

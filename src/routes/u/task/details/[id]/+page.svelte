@@ -8,6 +8,7 @@
 	import Preloader from '../../../../../libs/components/Preloader.svelte';
 	import Header from '../../../../../libs/components/Header.svelte';
 	import moment from 'moment';
+	import { goto } from '$app/navigation';
 
 	let loading = true;
 
@@ -39,8 +40,12 @@
 				else errorMessage = resp.statusText;
 			}
 			loading = false;
-		}, 300);
+		}, 10);
 	});
+
+	const onGotoTaskEdit = async () => {
+		await goto(`/u/task/details/${task.id}/edit`);
+	};
 </script>
 
 <svelte:head>
@@ -59,10 +64,15 @@
 <!-- ========================= Header End ========================= -->
 
 <main>
+	<section>
+		<article class='forms'>
+			<a class='link' href={`/u/task`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
+		</article>
+	</section>
+
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
-			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
 			<h1>Détails</h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
@@ -78,10 +88,17 @@
 			{#if task?.content}
 				<p>{task.content}</p>
 			{/if}
-
+		</article>
+		<article>
 			<h6 class='small-date' style=' margin-top: 1rem'>Dernière mise à jour
 				le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
 			<h6 class='small-date'>Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
+		</article>
+	</section>
+
+	<section class='tasks-edit' on:click={onGotoTaskEdit} on:keyup|preventDefault>
+		<article>
+			<i class='fa fa-pen'></i>
 		</article>
 	</section>
 	<!-- ========================= Forms End ========================= -->

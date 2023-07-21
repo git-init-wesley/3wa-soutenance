@@ -46,7 +46,7 @@
 			_email = email;
 			_token = localStorage.getItem('_token');
 			loading = false;
-		}, 300);
+		}, 10);
 	});
 
 	let usernameTouch = false;

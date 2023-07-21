@@ -27,7 +27,7 @@
 		await setTimeout(async () => {
 			await checkAuth($page.url);
 			loading = false;
-		}, 300);
+		}, 10);
 	});
 
 	let username = '';

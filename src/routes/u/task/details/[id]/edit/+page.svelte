@@ -46,7 +46,7 @@
 				else errorMessage = resp.statusText;
 			}
 			loading = false;
-		}, 300);
+		}, 10);
 	});
 
 
@@ -77,6 +77,10 @@
 
 		loading = false;
 	};
+
+	const onGotoTaskCancel = async () => {
+		await goto(`/u/task/details/${task.id}`);
+	};
 </script>
 
 <svelte:head>
@@ -95,10 +99,15 @@
 <!-- ========================= Header End ========================= -->
 
 <main>
+	<section>
+		<article class='forms'>
+			<a class='link' href={`/u/task/details/${task?.id}`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
+		</article>
+	</section>
+
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
-			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
 			<h1>Modification</h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
@@ -132,6 +141,12 @@
 			<h6 class='small-date'>Dernière mise à jour
 				le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
 			<h6 class='small-date'>Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
+		</article>
+	</section>
+
+	<section class='tasks-edit' on:click={onGotoTaskCancel} on:keyup|preventDefault>
+		<article>
+			<i class='fa fa-xmark'></i>
 		</article>
 	</section>
 	<!-- ========================= Forms End ========================= -->

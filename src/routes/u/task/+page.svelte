@@ -29,7 +29,7 @@
 				tasks = (await resp.json())?.tasks ?? [];
 			}
 			loading = false;
-		}, 300);
+		}, 10);
 	});
 
 	const onDeleteTask = async (id) => {

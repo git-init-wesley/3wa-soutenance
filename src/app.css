@@ -672,10 +672,33 @@ button[disabled], button[disabled]:hover {
     color: white;
 }
 
+.tasks-edit {
+    z-index: 10;
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    background: var(--primary-color);
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    transition: 0.3s ease;
+    opacity: .7;
+    cursor: pointer;
+}
+
+.tasks-edit:hover {
+    opacity: 1;
+}
+
+.tasks-edit i {
+    color: white;
+}
+
 .tasks-informations {
     border-top: rgba(0, 0, 0, .25) 1px solid;
+    border-bottom: rgba(0, 0, 0, .25) 1px solid;
     margin-top: 1rem;
     padding-top: 1rem;
+    padding-bottom: 1rem;
     text-align: left;
     width: 100%;
     display: flex;
@@ -692,13 +715,14 @@ button[disabled], button[disabled]:hover {
 }
 
 .tasks-informations h4 {
-    font-size: .75rem;
+    font-size: .8rem;
     font-weight: normal;
     width: 100%;
 }
 
 .tasks-informations p {
-    font-size: .7rem;
-    font-weight: lighter;
+    margin-top: 1rem;
+    font-size: .8rem;
+    font-weight: normal;
     width: 100%;
 }

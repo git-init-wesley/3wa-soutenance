@@ -28,7 +28,7 @@
 			_email = localStorage.getItem('_email');
 			_token = localStorage.getItem('_token');
 			loading = false;
-		}, 300);
+		}, 10);
 	});
 
 
