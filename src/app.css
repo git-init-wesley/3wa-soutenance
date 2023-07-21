@@ -36,7 +36,7 @@ button {
     --footer-box-shadow: 0 -0.25rem 1rem rgba(0, 0, 0, 0.20);
 
     --container-background-color: #fff;
-    --container-box-shadow: 0 0.25rem 3rem rgba(0, 0, 0, 0.20);
+    --container-box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.20);
     --container-text-color: #2c2c2c;
 
     --primary-color: #f64a4a;
@@ -289,6 +289,15 @@ section.container article h1 {
     transition: 0.3s ease;
 }
 
+.forms textarea {
+    background: var(--input-background-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    min-height: 10%;
+    max-width: 100%;
+}
+
 .forms input[type='checkbox'] {
     padding: 0;
     width: auto;
@@ -539,7 +548,7 @@ button[disabled], button[disabled]:hover {
 
 .tasks-table .table-items {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 2rem;
 }
 
@@ -596,6 +605,10 @@ button[disabled], button[disabled]:hover {
     font-size: .9rem;
 }
 
+.table-item-header h1 span {
+    color: var(--primary-color);
+}
+
 .table-item-header h2 {
     font-size: .75rem;
     font-weight: normal;
@@ -636,4 +649,56 @@ button[disabled], button[disabled]:hover {
     letter-spacing: 0.05rem;
     text-align: end;
     font-style: italic;
+}
+
+.tasks-add {
+    z-index: 10;
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    background: var(--success-color);
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    transition: 0.3s ease;
+    opacity: .7;
+    cursor: pointer;
+}
+
+.tasks-add:hover {
+    opacity: 1;
+}
+
+.tasks-add i {
+    color: white;
+}
+
+.tasks-informations {
+    border-top: rgba(0, 0, 0, .25) 1px solid;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0 !important;
+}
+
+.tasks-informations h3 {
+    font-size: .9rem;
+    font-weight: bold;
+    width: 100%;
+    padding: 0 0;
+    margin: 0 0;
+}
+
+.tasks-informations h4 {
+    font-size: .75rem;
+    font-weight: normal;
+    width: 100%;
+}
+
+.tasks-informations p {
+    font-size: .7rem;
+    font-weight: lighter;
+    width: 100%;
 }

@@ -5,8 +5,8 @@
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		const email = localStorage.getItem('auth_mail');
-		const token = localStorage.getItem('auth_token');
+		const email = localStorage.getItem('_email');
+		const token = localStorage.getItem('_token');
 
 		if (email && token) {
 			const url: URL = new URL(`${$page.url.origin}/api/auth/sign-in/token/delete`);
@@ -15,8 +15,8 @@
 			await fetch(url);
 		}
 
-		localStorage.removeItem('auth_token');
-		localStorage.removeItem('auth_mail');
+		localStorage.removeItem('_token');
+		localStorage.removeItem('_email');
 
 		await goto('/').then();
 	});

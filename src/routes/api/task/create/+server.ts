@@ -77,7 +77,7 @@ export async function GET({ url }: { url: URL }) {
 		await task.save();
 
 		// noinspection JSDeprecatedSymbols
-		await mongoServer.close()
+		await mongoServer.close();
 
 		return new Response(JSON.stringify({
 			id: task._id.toHexString(),

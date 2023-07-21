@@ -16,8 +16,11 @@ export async function GET({ url }: { url: URL }) {
 	const token = url.searchParams.get('token');
 
 	const task_id = url.searchParams.get('task_id');
+	const title = url.searchParams.get('title');
+	const description = url.searchParams.get('description');
+	const content = url.searchParams.get('content');
 
-	if (!email || !token || !task_id) throw error(400, { message: 'Error 400 : Bad request' });
+	if (!email || !token || !task_id || !title) throw error(400, { message: 'Error 400 : Bad request' });
 
 	if (!RegexMail.test(email))
 		return new Response(JSON.stringify({
@@ -64,32 +67,54 @@ export async function GET({ url }: { url: URL }) {
 
 		const task = await MTask.findById(new Types.ObjectId(task_id));
 
+		if (!task) {
+			// noinspection JSDeprecatedSymbols
+			await mongoServer.close();
+			return new Response(JSON.stringify({
+				code: 'task/task-does-not-exist',
+				message: 'La tâche n\'existe pas.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : task/task-does-not-exist'
+			});
+		}
+
+		if (task.owner_uid.toHexString() !== user._id.toHexString()) {
+			// noinspection JSDeprecatedSymbols
+			await mongoServer.close();
+			return new Response(JSON.stringify({
+				code: 'task/task-user-does-not-access',
+				message: 'L\'utilisateur n\'a pas accès à cette tâche.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : task/task-user-does-not-access'
+			});
+		}
+
+		task.title = title;
+		task.description = description ?? undefined;
+		task.content = content ?? undefined;
+
+		const updated_date = new Date().toISOString();
+		task.updated_at = updated_date;
+
+		await task.updateOne({
+			title: title,
+			description: description,
+			content: content,
+			updated_at: updated_date
+		});
+
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
-
-		if (!task) return new Response(JSON.stringify({
-			code: 'task/task-does-not-exist',
-			message: 'La tâche n\'existe pas.'
-		}), {
-			status: 406,
-			statusText: 'Error 406 : task/task-does-not-exist'
-		});
-
-		if (task.owner_uid.toHexString() !== user._id.toHexString()) return new Response(JSON.stringify({
-			code: 'task/task-user-does-not-access',
-			message: 'L\'utilisateur n\'a pas accès à cette tâche.'
-		}), {
-			status: 406,
-			statusText: 'Error 406 : task/task-user-does-not-access'
-		});
 
 		return new Response(JSON.stringify({
 			id: task._id.toHexString(),
 			created_at: task.created_at,
-			updated_at: task.updated_at,
-			title: task.title,
-			description: task.description,
-			content: task.content
+			updated_at: updated_date,
+			title: title,
+			description: description,
+			content: content
 		}), { status: 200 });
 	} catch (e: any) {
 		if (dev) console.log(e);
