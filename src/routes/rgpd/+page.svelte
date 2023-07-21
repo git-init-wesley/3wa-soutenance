@@ -31,9 +31,9 @@
 	<section class='container'>
 		<article>
 			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
-			<h1>DISCLAIMER</h1>
+			<h1>Clause de non-responsabilité</h1>
 			<p>
-				Ce site est fictif/non contractuelle, il a pour unique objectif la présentation d'une soutenance
+				Ce site est fictif/non contractuel, il a pour unique objectif la présentation d'une soutenance
 				pour le projet de fin d'année dans le cadre de la formation FSD.
 			</p>
 		</article>

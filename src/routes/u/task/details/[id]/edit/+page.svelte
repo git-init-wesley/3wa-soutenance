@@ -99,7 +99,7 @@
 <!-- ========================= Header End ========================= -->
 
 <main>
-	<section>
+	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/u/task/details/${task?.id}`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
 		</article>

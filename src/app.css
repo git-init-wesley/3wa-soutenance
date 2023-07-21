@@ -234,7 +234,11 @@ main {
     padding: 1.5rem 3rem;
 }
 
-/*===== Section Sign Style =====*/
+.bar-link {
+    margin-bottom: .4rem;
+}
+
+/*===== Section / Container Style =====*/
 section.container > article {
     display: flex;
     flex-direction: column;
@@ -253,6 +257,7 @@ section.container article h1 {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
+    text-align: center;
 }
 
 .container {
@@ -720,7 +725,7 @@ button[disabled], button[disabled]:hover {
     width: 100%;
 }
 
-.tasks-informations p {
+.tasks-informations pre {
     margin-top: 1rem;
     font-size: .8rem;
     font-weight: normal;

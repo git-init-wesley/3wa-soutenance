@@ -64,7 +64,7 @@
 <!-- ========================= Header End ========================= -->
 
 <main>
-	<section>
+	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/u/task`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
 		</article>
@@ -86,7 +86,7 @@
 			{/if}
 
 			{#if task?.content}
-				<p>{task.content}</p>
+				<pre>{task.content}</pre>
 			{/if}
 		</article>
 		<article>

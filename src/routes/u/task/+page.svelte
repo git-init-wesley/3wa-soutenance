@@ -108,7 +108,7 @@
 							Dernière mise à jour le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}
 						</p>
 						<p>
-							Compte crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}
+							Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}
 						</p>
 					</article>
 				</section>
