@@ -174,7 +174,7 @@
 	<section class='forms container'>
 		<article>
 			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
-			<h1>Profil</h1>
+			<h1>Profil <i class='fa fa-user'></i></h1>
 			{#if errorUsernameMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorUsernameMessage}</h2>
 			{/if}

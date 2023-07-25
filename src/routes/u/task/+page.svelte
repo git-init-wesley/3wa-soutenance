@@ -68,57 +68,64 @@
 
 <main>
 
-	<section class='tasks-table'>
-		<article class='table-header'>
-			<form class='forms' on:submit|preventDefault>
-				<section>
-					<article>
-						<input bind:value={filteredSearch} class='search-input' id='filtered-search' name='filtered-search'
-									 placeholder='Rechercher une tâche' type='text' />
-					</article>
-				</section>
-				<section>
-					<article>
-						<button type='submit'><i class='fa fa-search'></i></button>
-					</article>
-				</section>
-			</form>
-		</article>
-		<article class='table-items'>
-			{#each tasks.filter(f => {
-				if (filteredSearch === '' || filteredSearch === undefined) return true;
-				return f?.title?.toLowerCase?.().startsWith?.(filteredSearch?.toLowerCase?.())
-			}) as task, i}
-				<section>
-					<article class='table-item-header'>
-						<h1>
-							<a href={`${$page.url.origin}/u/task/details/${task.id}`}>
-								{task?.title?.toLowerCase?.()}
-							</a>
-							<i on:keyup|preventDefault on:click={() => onDeleteTask(task.id)} class='delete fa fa-xmark'></i>
-						</h1>
-						{#if task.description}
-							<h2>
-								{task.description}
-							</h2>
-						{/if}
-					</article>
-					<article class='table-item-footer'>
-						<p>
-							Dernière mise à jour le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}
-						</p>
-						<p>
-							Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}
-						</p>
-					</article>
-				</section>
-			{/each}
-		</article>
-		<article class='table-footer'>
-			<p>Nombre de tâche : {tasks.length}</p>
-		</article>
-	</section>
-
+	{#if tasks?.length > 0}
+		<section class='tasks-table'>
+			<article class='table-header'>
+				<form class='forms' on:submit|preventDefault>
+					<section>
+						<article>
+							<input bind:value={filteredSearch} class='search-input' id='filtered-search' name='filtered-search'
+										 placeholder='Rechercher une tâche' type='text' />
+						</article>
+					</section>
+					<section>
+						<article>
+							<button type='submit'><i class='fa fa-search'></i></button>
+						</article>
+					</section>
+				</form>
+			</article>
+			<article class='table-items'>
+				{#each tasks.filter(f => {
+					if (filteredSearch === '' || filteredSearch === undefined) return true;
+					return f?.title?.toLowerCase?.().startsWith?.(filteredSearch?.toLowerCase?.())
+				}) as task, i}
+					<section>
+						<article class='table-item-header'>
+							<h1>
+								<a href={`${$page.url.origin}/u/task/details/${task.id}`}>
+									{task?.title?.toLowerCase?.()}
+								</a>
+								<i on:keyup|preventDefault on:click={() => onDeleteTask(task.id)} class='delete fa fa-xmark'></i>
+							</h1>
+							{#if task.description}
+								<h2>
+									{task.description}
+								</h2>
+							{/if}
+						</article>
+						<article class='table-item-footer'>
+							<p>
+								Dernière mise à jour le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}
+							</p>
+							<p>
+								Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}
+							</p>
+						</article>
+					</section>
+				{/each}
+			</article>
+			<article class='table-footer'>
+				<p>Nombre de tâche : {tasks.length}</p>
+			</article>
+		</section>
+	{:else}
+		<section>
+			<article>
+				<h1>Vous n'avez pas encore de tâche.</h1>
+			</article>
+		</section>
+	{/if}
 	<section class='tasks-add' on:click={onGotoTaskCreate} on:keyup|preventDefault>
 		<article>
 			<i class='fa fa-add'></i>

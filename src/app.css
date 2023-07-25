@@ -520,44 +520,44 @@ button[disabled], button[disabled]:hover {
 }
 
 /*===== Tasks Style =====*/
-
+.users-table,
 .tasks-table {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.tasks-table .table-header {
+.table-header {
     border-bottom: rgba(0, 0, 0, .20) 1px solid;
     padding-bottom: 1rem;
 }
 
-.tasks-table .table-header form {
+.table-header form {
     display: flex;
     flex-direction: row;
 }
 
-.tasks-table .table-header form input {
+.table-header form input {
     border-top-right-radius: unset;
     border-bottom-right-radius: unset;
 }
 
-.tasks-table .table-header form button {
+.table-header form button {
     border-top-left-radius: unset;
     border-bottom-left-radius: unset;
 }
 
-.tasks-table .table-header form section:nth-child(1) {
+.table-header form section:nth-child(1) {
     flex: 1;
 }
 
-.tasks-table .table-items {
+.table-items {
     display: flex;
     flex-direction: column-reverse;
     gap: 2rem;
 }
 
-.tasks-table .table-items > section {
+.table-items > section {
     border-radius: 2rem;
     width: 100%;
     padding: 1rem 1.75rem;
@@ -589,6 +589,8 @@ button[disabled], button[disabled]:hover {
     opacity: .7;
 }
 
+.users-informations .delete,
+.tasks-informations .delete,
 .table-item-header .delete {
     color: var(--primary-color);
     font-weight: 700;
@@ -601,6 +603,8 @@ button[disabled], button[disabled]:hover {
     cursor: pointer;
 }
 
+.users-informations .delete:hover,
+.tasks-informations .delete:hover,
 .table-item-header .delete:hover {
     opacity: 1;
 }
@@ -643,12 +647,12 @@ button[disabled], button[disabled]:hover {
 }
 
 
-.tasks-table .table-footer {
+.table-footer {
     border-top: rgba(0, 0, 0, .20) 1px solid;
     padding-top: 1rem;
 }
 
-.tasks-table .table-footer p {
+.table-footer p {
     font-size: .7rem;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
@@ -677,6 +681,7 @@ button[disabled], button[disabled]:hover {
     color: white;
 }
 
+.users-edit,
 .tasks-edit {
     z-index: 10;
     position: fixed;
@@ -690,14 +695,17 @@ button[disabled], button[disabled]:hover {
     cursor: pointer;
 }
 
+.users-edit:hover,
 .tasks-edit:hover {
     opacity: 1;
 }
 
+.users-edit i,
 .tasks-edit i {
     color: white;
 }
 
+.users-informations,
 .tasks-informations {
     border-top: rgba(0, 0, 0, .25) 1px solid;
     border-bottom: rgba(0, 0, 0, .25) 1px solid;
@@ -711,6 +719,7 @@ button[disabled], button[disabled]:hover {
     gap: 0 !important;
 }
 
+.users-informations h3,
 .tasks-informations h3 {
     font-size: .9rem;
     font-weight: bold;
@@ -719,6 +728,7 @@ button[disabled], button[disabled]:hover {
     margin: 0 0;
 }
 
+.users-informations h4,
 .tasks-informations h4 {
     font-size: .8rem;
     font-weight: normal;
@@ -730,4 +740,28 @@ button[disabled], button[disabled]:hover {
     font-size: .8rem;
     font-weight: normal;
     width: 100%;
+    overflow: auto;
+}
+
+
+/*===== Stats Style =====*/
+
+.stats {
+    margin-top: .4rem;
+    gap: .25rem !important;
+}
+
+.stats p {
+    width: 100%;
+    text-align: left;
+}
+
+.stats span {
+    font-weight: bold !important;
+}
+
+/*===== Dash Style =====*/
+
+.dash-buttons {
+    margin-top: 2rem;
 }

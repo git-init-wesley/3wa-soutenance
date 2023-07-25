@@ -1,9 +1,10 @@
 <script lang='ts'>
-	import Header from '../libs/components/Header.svelte';
-	import Footer from '../libs/components/Footer.svelte';
-	import Preloader from '../libs/components/Preloader.svelte';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import Preloader from '../../../libs/components/Preloader.svelte';
+	import Header from '../../../libs/components/Header.svelte';
+	import Footer from '../../../libs/components/Footer.svelte';
+	import { goto } from '$app/navigation';
 
 	let users_admin = 0;
 	let users_register = 0;
@@ -21,10 +22,14 @@
 			tasks_register = (await (await fetch(`${$page.url.origin}/api/stats/tasks/register`)).json())?.tasks_register ?? 0;
 		}, 10);
 	});
+
+	const onGotoUser = async () => {
+		await goto('/a/dash/user');
+	};
 </script>
 
 <svelte:head>
-	<title>FSD - Accueil</title>
+	<title>FSD - Dashboard</title>
 </svelte:head>
 
 <!-- ========================= Preloader Start ========================= -->
@@ -39,13 +44,11 @@
 <main>
 	<section class='container'>
 		<article>
-			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
-			<h1>Accueil</h1>
+			<h1>Dashboard <i class='fa-solid fa-hammer'></i></h1>
 		</article>
-		<article class='stats'>
-			<p>Administrateur{users_admin > 1 ? 's' : ''} : <span class='success'>{users_admin}</span></p>
-			<p>Utilisateur enregistré : <span class='success'>{users_register}</span></p>
-			<p>Tâche enregistrée : <span class='success'>{tasks_register}</span></p>
+		<article class='forms dash-buttons'>
+			<button on:click={onGotoUser}>Utilisateurs <i class='fa fa-user'></i></button>
+			<button>Statistiques avancées <i class='fa-solid fa-arrow-trend-up'></i></button>
 		</article>
 	</section>
 </main>

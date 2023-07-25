@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { checkAuth } from '../functions/auth-functions';
 	import { page } from '$app/stores';
+	import { UserRoles } from '../user/user';
 
 	export let actualPathName;
 
@@ -33,7 +34,12 @@
 					</a>
 				{:else}
 					{#if logged}
-						<a class={actualPathName === '/u/task' ? 'actual' : ''} href='/u/task'>Tâches</a>
+						{#if user?.role === UserRoles.ADMIN}
+							<a class={actualPathName?.startsWith?.('/a/dash') ? 'actual' : ''} href='/a/dash'>Admin <i
+								class='fa-solid fa-hammer'></i></a>
+						{/if}
+						<a class={actualPathName?.startsWith?.('/u/task') ? 'actual' : ''} href='/u/task'>Tâches <i
+							class='fa-solid fa-clipboard'></i></a>
 						<a class={actualPathName === '/u/profile' ? 'actual' : ''} href='/u/profile'>
 							{user.username} <i class='fa fa-user'></i>
 						</a>

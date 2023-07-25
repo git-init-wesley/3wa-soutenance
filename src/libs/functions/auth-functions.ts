@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import type { UserToken } from '../user/user';
+import { UserRoles } from '../user/user';
 
 export const checkAuth = async ($url: URL) => {
 	const auth_token = localStorage.getItem('auth_token');
@@ -20,6 +21,19 @@ export const checkAuth = async ($url: URL) => {
 		if (!resp.ok) {
 			await goto('/');
 			return undefined;
+		}
+	} else if ($url.pathname.startsWith?.('/a')) {
+		if (!resp.ok) {
+			await goto('/');
+			return undefined;
+		} else {
+			const response = (await resp.json()) as { username: string, role: string, tokens: UserToken[], token: string };
+			if (response.role !== UserRoles.ADMIN) {
+				await goto('/');
+				return undefined;
+			} else {
+				return response;
+			}
 		}
 	}
 

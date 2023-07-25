@@ -3,38 +3,39 @@
 
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { checkAuth } from '../../../../../libs/functions/auth-functions';
-	import Footer from '../../../../../libs/components/Footer.svelte';
-	import Preloader from '../../../../../libs/components/Preloader.svelte';
-	import Header from '../../../../../libs/components/Header.svelte';
 	import moment from 'moment';
 	import { goto } from '$app/navigation';
+	import { checkAuth } from '../../../../../../libs/functions/auth-functions';
+	import Header from '../../../../../../libs/components/Header.svelte';
+	import Preloader from '../../../../../../libs/components/Preloader.svelte';
+	import Footer from '../../../../../../libs/components/Footer.svelte';
+	import { UserRoles } from '../../../../../../libs/user/user';
 
 	let loading = true;
 
-	let user = undefined;
+	let _user = undefined;
 	let _email = undefined;
 	let _token = undefined;
 
 	let errorMessage;
 
-	let task = undefined;
+	let user = undefined;
 
 	onMount(async () => {
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
-			user = await checkAuth($page.url);
+			_user = await checkAuth($page.url);
 			_email = localStorage.getItem('auth_email');
 			_token = localStorage.getItem('auth_token');
 			//
-			const url: URL = new URL(`${$page.url.origin}/api/task/read`);
+			const url: URL = new URL(`${$page.url.origin}/api/a/user/read`);
 			url.searchParams.set('email', _email ?? '');
 			url.searchParams.set('token', _token ?? '');
-			url.searchParams.set('task_id', $page.params.id);
+			url.searchParams.set('user_id', $page.params.id);
 
 			const resp: Response = await fetch(url);
 			if (resp.ok) {
-				task = await resp.json();
+				user = await resp.json();
 			} else {
 				if (resp.status === 406 || resp.status === 403) errorMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 				else errorMessage = resp.statusText;
@@ -43,21 +44,21 @@
 		}, 10);
 	});
 
-	const onDeleteTask = async (id) => {
+	const onDeleteUser = async (id) => {
 		loading = true;
-		const url: URL = new URL(`${$page.url.origin}/api/task/delete`);
+		const url: URL = new URL(`${$page.url.origin}/api/a/user/delete`);
 		url.searchParams.set('email', _email ?? '');
 		url.searchParams.set('token', _token ?? '');
-		url.searchParams.set('task_id', id ?? '');
+		url.searchParams.set('user_id', id ?? '');
 		const resp: Response = await fetch(url);
 		if (resp.ok) {
-			await goto(`/u/task/`);
+			await goto(`/a/dash/user`);
 		}
 		loading = false;
 	};
 
-	const onGotoTaskEdit = async () => {
-		await goto(`/u/task/details/${task.id}/edit`);
+	const onGotoUserEdit = async () => {
+		await goto(`/a/dash/user/details/${user.id}/edit`);
 	};
 </script>
 
@@ -79,7 +80,7 @@
 <main>
 	<section class='bar-link'>
 		<article class='forms'>
-			<a class='link' href={`/u/task`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
+			<a class='link' href={`/a/dash/user`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
 		</article>
 	</section>
 
@@ -91,25 +92,26 @@
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
 			{/if}
 		</article>
-		<article class='tasks-informations'>
-			<h3>{task?.title ?? 'N/A'} <i class='delete fa fa-xmark' on:click={() => onDeleteTask(task?.id)}
-																		on:keyup|preventDefault></i></h3>
-			{#if task?.description}
-				<h4>{task?.description ?? 'N/A'}</h4>
-			{/if}
-
-			{#if task?.content}
-				<pre>{task.content}</pre>
-			{/if}
+		<article class='users-informations'>
+			<h3>
+				{#if user?.role === UserRoles.ADMIN}
+					<i class='fa-solid fa-crown primary'></i>
+				{/if}
+				{user?.email ?? 'N/A'}
+				{#if user?.role !== UserRoles.ADMIN}
+					<i class='delete fa fa-xmark' on:click={() => onDeleteUser(user?.id)} on:keyup|preventDefault></i>
+				{/if}
+			</h3>
+			<h4>{user?.username ?? 'N/A'}</h4>
 		</article>
 		<article>
 			<h6 class='small-date' style=' margin-top: 1rem'>Dernière mise à jour
-				le {moment(new Date(task?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
-			<h6 class='small-date'>Tâche crée le {moment(new Date(task?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
+				le {moment(new Date(user?.updated_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
+			<h6 class='small-date'>Compte crée le {moment(new Date(user?.created_at)).format('DD/MM/YYYY à HH:mm:ss')}</h6>
 		</article>
 	</section>
 
-	<section class='tasks-edit' on:click={onGotoTaskEdit} on:keyup|preventDefault>
+	<section class='users-edit' on:click={onGotoUserEdit} on:keyup|preventDefault>
 		<article>
 			<i class='fa fa-pen'></i>
 		</article>
