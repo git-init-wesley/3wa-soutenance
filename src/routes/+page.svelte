@@ -5,21 +5,19 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 
-	let users_admin = 0;
-	let users_register = 0;
-	let tasks_register = 0;
+	let users_admin = undefined;
+	let users_register = undefined;
+	let tasks_register = undefined;
 
 	// On mount of the page (when the page is loaded)
 	onMount(async () => {
 		// Define the current year
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		// Remove the preloader
-		await setTimeout(async () => {
-			document.querySelector('.preloader').remove();
-			users_admin = (await (await fetch(`${$page.url.origin}/api/stats/users/admin`)).json())?.users_admin ?? 0;
-			users_register = (await (await fetch(`${$page.url.origin}/api/stats/users/register`)).json())?.users_register ?? 0;
-			tasks_register = (await (await fetch(`${$page.url.origin}/api/stats/tasks/register`)).json())?.tasks_register ?? 0;
-		}, 10);
+		document.querySelector('.preloader').remove();
+		setTimeout(async () => users_admin = (await (await fetch(`${$page.url.origin}/api/stats/users/admin`)).json())?.users_admin ?? 0, 0);
+		setTimeout(async () => users_register = (await (await fetch(`${$page.url.origin}/api/stats/users/register`)).json())?.users_register ?? 0, 0);
+		setTimeout(async () => tasks_register = (await (await fetch(`${$page.url.origin}/api/stats/tasks/register`)).json())?.tasks_register ?? 0, 0);
 	});
 </script>
 
@@ -43,9 +41,22 @@
 			<h1>Accueil</h1>
 		</article>
 		<article class='stats'>
-			<p>Administrateur{users_admin > 1 ? 's' : ''} : <span class='success'>{users_admin}</span></p>
-			<p>Utilisateur enregistré : <span class='success'>{users_register}</span></p>
-			<p>Tâche enregistrée : <span class='success'>{tasks_register}</span></p>
+			{#if users_admin === undefined}
+				<p>Administrateur : <span class='spinner'>•</span></p>
+			{:else }
+				<p>Administrateur{users_admin > 1 ? 's' : ''} : <span class='success'>{users_admin}</span></p>
+			{/if}
+			{#if users_register === undefined}
+				<p>Utilisateur enregistré : <span class='spinner'>•</span></p>
+			{:else}
+				<p>Utilisateur enregistré : <span class='success'>{users_register}</span></p>
+			{/if}
+
+			{#if tasks_register === undefined}
+				<p>Tâche enregistrée : <span class='spinner'>•</span></p>
+			{:else}
+				<p>Tâche enregistrée : <span class='success'>{tasks_register}</span></p>
+			{/if}
 		</article>
 	</section>
 </main>

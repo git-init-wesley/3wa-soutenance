@@ -20,7 +20,7 @@
 	let errorMessage;
 
 	let findUser = undefined;
-	let tasks_count = 0;
+	let tasks_count = undefined;
 
 	onMount(async () => {
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
@@ -112,7 +112,8 @@
 				{/if}
 			</h3>
 			<h4>{findUser?.email ?? 'N/A'}</h4>
-			<h5>Tâche{tasks_count > 1 ? 's' : ''} : <span class='success'>{tasks_count}</span></h5>
+			<h5>Tâche{tasks_count > 1 ? 's' : ''} : <span
+				class={tasks_count ? 'success' : 'primary'}>{tasks_count ?? 'Chargement'}</span></h5>
 		</article>
 		<article>
 			<h6 class='small-date' style=' margin-top: 1rem'>Dernière mise à jour
