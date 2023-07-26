@@ -13,8 +13,8 @@
 	let loading = true;
 
 	let user = undefined;
-	let _email = undefined;
-	let _token = undefined;
+	let auth_email = undefined;
+	let auth_token = undefined;
 
 	let errorMessage;
 
@@ -24,18 +24,16 @@
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
-			_email = localStorage.getItem('auth_email');
-			_token = localStorage.getItem('auth_token');
-			//
+			auth_email = localStorage.getItem('auth_email');
+			auth_token = localStorage.getItem('auth_token');
 			const url: URL = new URL(`${$page.url.origin}/api/task/read`);
-			url.searchParams.set('email', _email ?? '');
-			url.searchParams.set('token', _token ?? '');
+			url.searchParams.set('email', auth_email ?? '');
+			url.searchParams.set('token', auth_token ?? '');
 			url.searchParams.set('task_id', $page.params.id);
 
 			const resp: Response = await fetch(url);
-			if (resp.ok) {
-				task = await resp.json();
-			} else {
+			if (resp.ok) task = await resp.json();
+			else {
 				if (resp.status === 406 || resp.status === 403) errorMessage = (await resp.json())?.message ?? 'Erreur inconnue.';
 				else errorMessage = resp.statusText;
 			}
@@ -46,19 +44,15 @@
 	const onDeleteTask = async (id) => {
 		loading = true;
 		const url: URL = new URL(`${$page.url.origin}/api/task/delete`);
-		url.searchParams.set('email', _email ?? '');
-		url.searchParams.set('token', _token ?? '');
+		url.searchParams.set('email', auth_email ?? '');
+		url.searchParams.set('token', auth_token ?? '');
 		url.searchParams.set('task_id', id ?? '');
 		const resp: Response = await fetch(url);
-		if (resp.ok) {
-			await goto(`/u/task/`);
-		}
+		if (resp.ok) await goto(`/u/task/`);
 		loading = false;
 	};
 
-	const onGotoTaskEdit = async () => {
-		await goto(`/u/task/details/${task.id}/edit`);
-	};
+	const onGotoTaskEdit = async () => await goto(`/u/task/details/${task.id}/edit`);
 </script>
 
 <svelte:head>

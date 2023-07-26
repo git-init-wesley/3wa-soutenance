@@ -9,22 +9,22 @@
 	import { goto } from '$app/navigation';
 
 	let loading = true;
-	let _token = undefined;
-	let _email = undefined;
+	let auth_token = undefined;
+	let auth_email = undefined;
 	let user = undefined;
 	let tasks = [];
 	let filteredSearch = '';
 
 	onMount(async () => {
-		_token = localStorage.getItem('auth_token');
-		_email = localStorage.getItem('auth_email');
+		auth_token = localStorage.getItem('auth_token');
+		auth_email = localStorage.getItem('auth_email');
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
 			if (user) {
 				const url: URL = new URL(`${$page.url.origin}/api/task/read/all`);
-				url.searchParams.set('email', _email ?? '');
-				url.searchParams.set('token', _token ?? '');
+				url.searchParams.set('email', auth_email ?? '');
+				url.searchParams.set('token', auth_token ?? '');
 				const resp: Response = await fetch(url);
 				tasks = (await resp.json())?.tasks ?? [];
 			}
@@ -35,8 +35,8 @@
 	const onDeleteTask = async (id) => {
 		loading = true;
 		const url: URL = new URL(`${$page.url.origin}/api/task/delete`);
-		url.searchParams.set('email', _email ?? '');
-		url.searchParams.set('token', _token ?? '');
+		url.searchParams.set('email', auth_email ?? '');
+		url.searchParams.set('token', auth_token ?? '');
 		url.searchParams.set('task_id', id ?? '');
 		const resp: Response = await fetch(url);
 		if (resp.ok) {
@@ -46,9 +46,7 @@
 		loading = false;
 	};
 
-	const onGotoTaskCreate = async () => {
-		await goto('/u/task/create');
-	};
+	const onGotoTaskCreate = async () => await goto('/u/task/create');
 </script>
 
 <svelte:head>

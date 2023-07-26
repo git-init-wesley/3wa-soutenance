@@ -519,7 +519,7 @@ button[disabled], button[disabled]:hover {
     font-size: .5rem;
 }
 
-/*===== Tasks Style =====*/
+/*===== Tasks / Users Style =====*/
 .users-table,
 .tasks-table {
     display: flex;
@@ -733,6 +733,17 @@ button[disabled], button[disabled]:hover {
     font-size: .8rem;
     font-weight: normal;
     width: 100%;
+}
+
+.users-informations h5 {
+    margin-top: .8rem;
+    font-size: .8rem;
+    font-weight: normal;
+    width: 100%;
+}
+
+.users-informations h5 span {
+    font-weight: bold;
 }
 
 .tasks-informations pre {

@@ -30,21 +30,21 @@
 	let successEmailMessage = undefined;
 	let successPasswordMessage = undefined;
 
-	let username = undefined, _username = undefined;
-	let email = undefined, _email = undefined;
-	let password = undefined;
+	let username = undefined;
+	let email = undefined;
+	let password = '';
 	let user = undefined;
-	let _token;
+	let auth_email = undefined;
+	let auth_token = undefined;
 
 	onMount(async () => {
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
 			username = user?.username;
-			_username = username;
-			email = localStorage.getItem('auth_email');
-			_email = email;
-			_token = localStorage.getItem('auth_token');
+			auth_email = localStorage.getItem('auth_email');
+			email = auth_email;
+			auth_token = localStorage.getItem('auth_token');
 			loading = false;
 		}, 10);
 	});
@@ -54,7 +54,6 @@
 	let emailTouch = false;
 	let passwordTouch = false;
 	let passwordTooltips = false;
-
 
 	const onSubmit = async (_: Event) => {
 		loading = true;
@@ -70,17 +69,16 @@
 
 		let validate = true;
 
-		if (_username !== username) {
+		if (user?.username !== username) {
 			if (!RegexUsername.test(username)) validate = false;
 			if (validate) {
 				const url: URL = new URL(`${$page.url.origin}/api/u/update/username`);
-				url.searchParams.set('old_username', _username);
+				url.searchParams.set('old_username', user?.username);
 				url.searchParams.set('new_username', username);
-				url.searchParams.set('token', _token);
+				url.searchParams.set('token', auth_token);
 				const resp: Response = await fetch(url);
 				if (resp.ok) {
 					_relaunchHeader = !_relaunchHeader;
-					_username = username;
 					successUsernameMessage = 'Changement de pseudonyme pris en compte.';
 					user = await resp.json();
 				} else {
@@ -92,17 +90,17 @@
 
 		validate = true;
 
-		if (_email !== email) {
+		if (auth_email !== email) {
 			if (!RegexMail.test(email)) validate = false;
 			if (validate) {
 				const url: URL = new URL(`${$page.url.origin}/api/u/update/email`);
-				url.searchParams.set('old_email', _email);
+				url.searchParams.set('old_email', auth_email);
 				url.searchParams.set('new_email', email);
-				url.searchParams.set('token', _token);
+				url.searchParams.set('token', auth_token);
 				const resp: Response = await fetch(url);
 				if (resp.ok) {
 					localStorage.setItem('auth_email', email);
-					_email = email;
+					auth_email = email;
 					successEmailMessage = 'Changement d\'adresse mail pris en compte.';
 					user = await resp.json();
 				} else {
@@ -118,12 +116,12 @@
 			if (!RegexPassword.test(password)) validate = false;
 			if (validate) {
 				const url: URL = new URL(`${$page.url.origin}/api/u/update/password`);
-				url.searchParams.set('email', _email);
+				url.searchParams.set('email', user.email);
 				url.searchParams.set('new_password', password);
-				url.searchParams.set('token', _token);
+				url.searchParams.set('token', auth_token);
 				const resp: Response = await fetch(url);
 				if (resp.ok) {
-					password = undefined;
+					password = '';
 					successPasswordMessage = 'Changement de mot de passe pris en compte.';
 					user = await resp.json();
 				} else {
@@ -132,18 +130,17 @@
 				}
 			}
 		}
-
 		loading = false;
 	};
 
 	const deleteToken = async (token: string) => {
 		loading = true;
 		const url: URL = new URL(`${$page.url.origin}/api/auth/sign-in/token/delete`);
-		url.searchParams.set('email', _email);
+		url.searchParams.set('email', auth_email);
 		url.searchParams.set('token', token);
 		await fetch(url);
 		user.tokens = user.tokens.filter(f => f.token !== token);
-		if (token === _token) await goto('/');
+		if (token === auth_token) await goto('/');
 		loading = false;
 	};
 
@@ -284,7 +281,7 @@
 					</article>
 				</section>
 				<button
-					disabled={_username !== username || _email !== email || password !== undefined	 ? undefined : 'disabled'}
+					disabled={user?.username !== username || auth_email !== email || password !== ''	 ? undefined : 'disabled'}
 					type='submit'>
 					Enregistrer
 				</button>
@@ -304,7 +301,7 @@
 				{#each user?.tokens as token, i}
 					<section class='session'>
 						<article>
-							{#if _token === token.token}
+							{#if auth_token === token.token}
 								<a class='success link our-session' href={undefined} on:click={() => deleteToken(token.token)}>
 									<i class='fa fa-circle'></i>Votre session
 								</a>

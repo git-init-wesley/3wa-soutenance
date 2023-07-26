@@ -12,8 +12,8 @@
 	let loading = true;
 
 	let user = undefined;
-	let _email = undefined;
-	let _token = undefined;
+	let auth_email = undefined;
+	let auth_token = undefined;
 
 	let errorMessage;
 
@@ -25,8 +25,8 @@
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
-			_email = localStorage.getItem('auth_email');
-			_token = localStorage.getItem('auth_token');
+			auth_email = localStorage.getItem('auth_email');
+			auth_token = localStorage.getItem('auth_token');
 			loading = false;
 		}, 10);
 	});
@@ -41,8 +41,8 @@
 
 		if (validate) {
 			const url: URL = new URL(`${$page.url.origin}/api/task/create`);
-			url.searchParams.set('email', _email ?? '');
-			url.searchParams.set('token', _token ?? '');
+			url.searchParams.set('email', auth_email ?? '');
+			url.searchParams.set('token', auth_token ?? '');
 			url.searchParams.set('title', title);
 			if (description) url.searchParams.set('description', description);
 			if (content) url.searchParams.set('content', content);

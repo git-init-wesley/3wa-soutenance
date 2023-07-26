@@ -9,22 +9,22 @@
 	import { UserRoles } from '../../../../libs/user/user';
 
 	let loading = true;
-	let _token = undefined;
-	let _email = undefined;
+	let auth_token = undefined;
+	let auth_email = undefined;
 	let user = undefined;
 	let users = [];
 	let filteredSearch = '';
 
 	onMount(async () => {
-		_token = localStorage.getItem('auth_token');
-		_email = localStorage.getItem('auth_email');
+		auth_token = localStorage.getItem('auth_token');
+		auth_email = localStorage.getItem('auth_email');
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
 			user = await checkAuth($page.url);
 			if (user) {
 				const url: URL = new URL(`${$page.url.origin}/api/a/user/read/all`);
-				url.searchParams.set('email', _email ?? '');
-				url.searchParams.set('token', _token ?? '');
+				url.searchParams.set('email', auth_email ?? '');
+				url.searchParams.set('token', auth_token ?? '');
 				const resp: Response = await fetch(url);
 				users = (await resp.json())?.users ?? [];
 			}
@@ -35,8 +35,8 @@
 	const onDeleteUser = async (id) => {
 		loading = true;
 		const url: URL = new URL(`${$page.url.origin}/api/a/user/delete`);
-		url.searchParams.set('email', _email ?? '');
-		url.searchParams.set('token', _token ?? '');
+		url.searchParams.set('email', auth_email ?? '');
+		url.searchParams.set('token', auth_token ?? '');
 		url.searchParams.set('user_id', id ?? '');
 		const resp: Response = await fetch(url);
 		if (resp.ok) {

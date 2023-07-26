@@ -12,13 +12,13 @@ export async function GET() {
 		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 		await mongoServer.init();
 
-		let users = await MUser.count().exec();
+		let users_count = await MUser.count().exec();
 
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 
 		return new Response(JSON.stringify({
-			users_register: users,
+			users_register: users_count,
 			stats_at: new Date().toISOString()
 		}), { status: 200 });
 	} catch (e: any) {

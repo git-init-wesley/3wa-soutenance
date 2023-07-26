@@ -13,13 +13,13 @@ export async function GET() {
 		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 		await mongoServer.init();
 
-		let users = await MUser.count({ role: UserRoles.ADMIN }).exec();
+		let users_admin_count = await MUser.count({ role: UserRoles.ADMIN }).exec();
 
 		// noinspection JSDeprecatedSymbols
 		await mongoServer.close();
 
 		return new Response(JSON.stringify({
-			users_admin: users,
+			users_admin: users_admin_count,
 			stats_at: new Date().toISOString()
 		}), { status: 200 });
 	} catch (e: any) {
