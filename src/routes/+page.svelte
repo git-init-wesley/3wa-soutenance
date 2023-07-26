@@ -49,13 +49,15 @@
 			{#if users_register === undefined}
 				<p>Utilisateur enregistré : <span class='spinner'>•</span></p>
 			{:else}
-				<p>Utilisateur enregistré : <span class='success'>{users_register}</span></p>
+				<p>Utilisateur{users_register > 1 ? 's' : ''} enregistré{users_register > 1 ? 's' : ''} : <span
+					class='success'>{users_register}</span></p>
 			{/if}
 
 			{#if tasks_register === undefined}
 				<p>Tâche enregistrée : <span class='spinner'>•</span></p>
 			{:else}
-				<p>Tâche enregistrée : <span class='success'>{tasks_register}</span></p>
+				<p>Tâche{tasks_register > 1 ? 's' : ''} enregistrée{tasks_register > 1 ? 's' : ''} : <span
+					class='success'>{tasks_register}</span></p>
 			{/if}
 		</article>
 	</section>
