@@ -40,6 +40,16 @@ export async function GET({ url }: { url: URL }) {
 		const mongoServer = new Mongodb(environmentServer.mongoUri, '3wa');
 		await mongoServer.init();
 
+		let existsUser = await MUser.exists({ email: new_email }).exec();
+		if (existsUser !== null)
+			return new Response(JSON.stringify({
+				code: 'auth/email-already-in-use',
+				message: 'Adresse mail déjà utilisée.'
+			}), {
+				status: 406,
+				statusText: 'Error 406 : auth/email-already-in-use'
+			});
+
 		let user = await MUser.findOne({ email: old_email }).exec();
 
 		if (!user) return new Response(JSON.stringify({

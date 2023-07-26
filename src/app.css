@@ -48,7 +48,7 @@ button {
 
 
     --tooltips-background-color: #fff;
-    --tooltips-box-shadow: 0 0.25rem 3rem rgba(0, 0, 0, 0.20);
+    --tooltips-box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.20);
 }
 
 .primary {

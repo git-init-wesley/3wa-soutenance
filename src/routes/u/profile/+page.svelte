@@ -112,7 +112,7 @@
 
 		validate = true;
 
-		if (password !== undefined) {
+		if (password !== '') {
 			if (!RegexPassword.test(password)) validate = false;
 			if (validate) {
 				const url: URL = new URL(`${$page.url.origin}/api/u/update/password`);
