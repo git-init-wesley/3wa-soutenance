@@ -1,7 +1,7 @@
 <script lang='ts'>
-	import Header from '../../libs/components/Header.svelte';
-	import Footer from '../../libs/components/Footer.svelte';
-	import Preloader from '../../libs/components/Preloader.svelte';
+	import Header from '../../libs/components/header/Header.svelte';
+	import Footer from '../../libs/components/footer/Footer.svelte';
+	import Preloader from '../../libs/components/preloader/Preloader.svelte';
 	import { onMount } from 'svelte';
 
 	// On mount of the page (when the page is loaded)

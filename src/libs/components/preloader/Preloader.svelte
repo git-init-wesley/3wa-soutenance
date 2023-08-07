@@ -1,3 +1,7 @@
+<script>
+	import './preloader.min.css';
+</script>
+
 <!-- ========================= Preloader Start ========================= -->
 <div class='preloader'>
 	<div class='loader'>

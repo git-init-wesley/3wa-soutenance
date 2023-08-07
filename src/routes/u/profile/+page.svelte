@@ -3,9 +3,9 @@
 
 	import { onMount } from 'svelte';
 	import moment from 'moment';
-	import Footer from '../../../libs/components/Footer.svelte';
-	import Header from '../../../libs/components/Header.svelte';
-	import Preloader from '../../../libs/components/Preloader.svelte';
+	import Footer from '../../../libs/components/footer/Footer.svelte';
+	import Header from '../../../libs/components/header/Header.svelte';
+	import Preloader from '../../../libs/components/preloader/Preloader.svelte';
 	import { page } from '$app/stores';
 	import { checkAuth } from '../../../libs/functions/auth-functions';
 	import {

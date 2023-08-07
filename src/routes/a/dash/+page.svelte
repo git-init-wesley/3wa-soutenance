@@ -1,8 +1,8 @@
 <script lang='ts'>
 	import { onMount } from 'svelte';
-	import Preloader from '../../../libs/components/Preloader.svelte';
-	import Header from '../../../libs/components/Header.svelte';
-	import Footer from '../../../libs/components/Footer.svelte';
+	import Preloader from '../../../libs/components/preloader/Preloader.svelte';
+	import Header from '../../../libs/components/header/Header.svelte';
+	import Footer from '../../../libs/components/footer/Footer.svelte';
 	import { goto } from '$app/navigation';
 
 	let loading = true;

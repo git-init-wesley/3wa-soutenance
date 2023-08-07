@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import Preloader from '../../../libs/components/Preloader.svelte';
+	import Preloader from '../../../libs/components/preloader/Preloader.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';

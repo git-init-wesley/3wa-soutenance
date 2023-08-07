@@ -1,6 +1,5 @@
 <script lang='ts'>
-	import '../app.min.css';
-	import '../preloader.min.css';
+	import '../app.css';
 </script>
 
 <slot />

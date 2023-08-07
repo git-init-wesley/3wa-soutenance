@@ -1,9 +1,9 @@
 <script lang='ts'>
 
 	import { onMount } from 'svelte';
-	import Footer from '../../../libs/components/Footer.svelte';
-	import Header from '../../../libs/components/Header.svelte';
-	import Preloader from '../../../libs/components/Preloader.svelte';
+	import Footer from '../../../libs/components/footer/Footer.svelte';
+	import Header from '../../../libs/components/header/Header.svelte';
+	import Preloader from '../../../libs/components/preloader/Preloader.svelte';
 	import { RegexMail } from '../../../libs/utils/utils';
 	import { checkAuth } from '../../../libs/functions/auth-functions';
 	import { page } from '$app/stores';
