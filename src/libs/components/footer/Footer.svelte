@@ -1,3 +1,6 @@
+<script>
+	import './footer.min.css';
+</script>
 <!-- ========================= Footer Start ========================= -->
 <footer>
 	<section>

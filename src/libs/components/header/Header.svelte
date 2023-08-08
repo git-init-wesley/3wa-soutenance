@@ -32,11 +32,12 @@
 			</a>
 			{#if !deployed}
 				<a class='open-button' href={undefined} on:click={onDeploy}><i class='fa-solid fa-bars'></i></a>
+			{:else}
+				<a class='close-button' href={undefined} on:click={onDeploy}><i class='fa-solid fa-xmark'></i></a>
 			{/if}
 		</article>
 		<article>
 			<nav data-deploy={deployed ? 'deploy' : undefined}>
-				<a class='close-button' href={undefined} on:click={onDeploy}><i class='fa-solid fa-xmark'></i></a>
 				<a class={actualPathName === '/' ? 'actual' : ''} href='/'>
 					Accueil <i class='fa fa-house'></i>
 				</a>

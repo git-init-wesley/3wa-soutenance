@@ -1,0 +1,28 @@
+/*===== Stats Style =====*/
+.stats {
+    margin-top: .6rem;
+    gap: .25rem !important;
+}
+
+.stats p {
+    width: 100%;
+    text-align: left;
+}
+
+.stats span {
+    font-weight: bold !important;
+}
+
+.stats .spinner {
+    color: var(--link-color);
+    animation: stats-spinner 666ms infinite both;
+}
+
+@keyframes stats-spinner {
+    0% {
+        font-size: .6rem;
+    }
+    to {
+        font-size: .8rem;
+    }
+}

@@ -1,0 +1,1 @@
+.stats{margin-top:.6rem;gap:.25rem!important}.stats p{width:100%;text-align:left}.stats span{font-weight:700!important}.stats .spinner{color:var(--link-color);animation:666ms infinite both stats-spinner}@keyframes stats-spinner{0%{font-size:.6rem}to{font-size:.8rem}}
