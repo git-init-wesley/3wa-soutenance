@@ -39,7 +39,7 @@
 		</article>
 		<article class='forms dash-buttons'>
 			<button on:click={onGotoUser}>Utilisateurs <i class='fa fa-user'></i></button>
-			<button>Statistiques avancées <i class='fa-solid fa-arrow-trend-up'></i></button>
+			<button disabled>Statistiques avancées <i class='fa-solid fa-arrow-trend-up'></i></button>
 		</article>
 	</section>
 </main>

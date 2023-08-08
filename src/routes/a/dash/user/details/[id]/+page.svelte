@@ -96,10 +96,15 @@
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
-			<h1>Détails</h1>
+			<h1>Détails <i class='fa-solid fa-bars-staggered'></i></h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
 			{/if}
+			<form class='forms' on:submit|preventDefault>
+				<button on:click={onGotoUserEdit}>
+					Modifier l'utilisateur <i class='fa fa-pen'></i>
+				</button>
+			</form>
 		</article>
 		<article class='users-informations'>
 			<h3>
