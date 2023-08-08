@@ -95,7 +95,7 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/u/task/details/${task?.id}`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
@@ -105,7 +105,7 @@
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
-			<h1>Modification</h1>
+			<h1>Modification <i class='fa fa-pen'></i></h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
 			{/if}

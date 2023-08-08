@@ -9,15 +9,14 @@
 	let users_register = undefined;
 	let tasks_register = undefined;
 
-	// On mount of the page (when the page is loaded)
+	let loading = true;
+
 	onMount(async () => {
-		// Define the current year
-		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
-		// Remove the preloader
 		document.querySelector('.preloader').remove();
 		setTimeout(async () => users_admin = (await (await fetch(`${$page.url.origin}/api/stats/users/admin`)).json())?.users_admin ?? 0, 0);
 		setTimeout(async () => users_register = (await (await fetch(`${$page.url.origin}/api/stats/users/register`)).json())?.users_register ?? 0, 0);
 		setTimeout(async () => tasks_register = (await (await fetch(`${$page.url.origin}/api/stats/tasks/register`)).json())?.tasks_register ?? 0, 0);
+		loading = false;
 	});
 </script>
 
@@ -26,7 +25,9 @@
 </svelte:head>
 
 <!-- ========================= Preloader Start ========================= -->
-<Preloader></Preloader>
+{#if loading}
+	<Preloader></Preloader>
+{/if}
 <!-- ========================= Preloader End ========================= -->
 
 
@@ -34,11 +35,11 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='container'>
 		<article>
 			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
-			<h1>Accueil</h1>
+			<h1>Accueil <i class='fa fa-house'></i></h1>
 		</article>
 		<article class='stats'>
 			{#if users_admin === undefined}

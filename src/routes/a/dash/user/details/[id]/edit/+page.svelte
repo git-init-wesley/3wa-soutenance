@@ -108,7 +108,7 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/a/dash/user/details/${findUser?.id}`}><i class='fa-solid fa-arrow-left-long'></i>

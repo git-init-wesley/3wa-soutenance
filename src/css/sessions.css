@@ -1,0 +1,58 @@
+/*===== Sessions (Container) Style =====*/
+.session {
+    font-size: .75rem;
+    text-align: start;
+    margin: auto auto;
+}
+
+.sessions > article {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+
+
+.session .link {
+    color: var(--link-color);
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    text-decoration: none;
+    text-align: right;
+    transition: all .3s ease;
+    opacity: .7;
+    cursor: pointer;
+}
+
+.session .link:hover {
+    opacity: 1;
+}
+
+.session .link i {
+    margin: auto .1rem;
+}
+
+.session p.token {
+    font-size: 0.6rem;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    width: calc(100vw * 0.50);
+}
+
+.session .date {
+    font-size: 0.6rem;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+}
+
+.session .date .expired {
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: var(--primary-color);
+}
+
+.session .our-session i {
+    margin: auto .1rem;
+    font-size: .5rem;
+}

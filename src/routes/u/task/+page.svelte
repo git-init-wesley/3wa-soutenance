@@ -64,7 +64,7 @@
 <!-- ========================= Header End ========================= -->
 
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 
 	{#if tasks?.length > 0}
 		<section class='tasks-table'>
@@ -83,6 +83,11 @@
 					</section>
 				</form>
 			</article>
+			<form class='forms' on:submit|preventDefault>
+				<button on:click={onGotoTaskCreate}>
+					Ajouter une tâche <i class='fa fa-add'></i>
+				</button>
+			</form>
 			<article class='table-items'>
 				{#each tasks.filter(f => {
 					if (filteredSearch === '' || filteredSearch === undefined) return true;
@@ -94,7 +99,7 @@
 								<a href={`${$page.url.origin}/u/task/details/${task.id}`}>
 									{task?.title?.toLowerCase?.()}
 								</a>
-								<i on:keyup|preventDefault on:click={() => onDeleteTask(task.id)} class='delete fa fa-xmark'></i>
+								<i on:keyup|preventDefault on:click={() => onDeleteTask(task.id)} class='delete fa fa-trash'></i>
 							</h1>
 							{#if task.description}
 								<h2>

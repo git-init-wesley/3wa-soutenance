@@ -70,7 +70,7 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/u/task`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>
@@ -80,13 +80,18 @@
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
-			<h1>Détails</h1>
+			<h1>Détails <i class='fa-solid fa-bars-staggered'></i></h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
 			{/if}
+			<form class='forms' on:submit|preventDefault>
+				<button on:click={onGotoTaskEdit}>
+					Modifier la tâche <i class='fa fa-pen'></i>
+				</button>
+			</form>
 		</article>
 		<article class='tasks-informations'>
-			<h3>{task?.title ?? 'N/A'} <i class='delete fa fa-xmark' on:click={() => onDeleteTask(task?.id)}
+			<h3>{task?.title ?? 'N/A'} <i class='delete fa fa-trash' on:click={() => onDeleteTask(task?.id)}
 																		on:keyup|preventDefault></i></h3>
 			{#if task?.description}
 				<h4>{task?.description ?? 'N/A'}</h4>

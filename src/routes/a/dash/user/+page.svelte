@@ -63,7 +63,7 @@
 <!-- ========================= Header End ========================= -->
 
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='bar-link'>
 		<article class='forms'>
 			<a class='link' href={`/a/dash`}><i class='fa-solid fa-arrow-left-long'></i> Retour</a>

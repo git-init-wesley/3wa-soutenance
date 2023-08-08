@@ -94,12 +94,12 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
 			<img alt='3WA - Logo' height='144' src='/icons/3wa.png' width='130' />
-			<h1>Connexion</h1>
+			<h1>Connexion <i class='fa-solid fa-arrow-right-to-bracket'></i></h1>
 			{#if errorMessage}
 				<h2 class='error'><i class='fa fa-circle-xmark'></i>{errorMessage}</h2>
 			{/if}

@@ -32,7 +32,7 @@
 <Header></Header>
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<section class='container'>
 		<article>
 			<h1>Dashboard <i class='fa-solid fa-hammer'></i></h1>

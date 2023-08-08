@@ -166,7 +166,7 @@
 {/if}
 <!-- ========================= Header End ========================= -->
 
-<main>
+<main loading={loading ? 'loading' : undefined}>
 	<!-- ========================= Forms Start ========================= -->
 	<section class='forms container'>
 		<article>
