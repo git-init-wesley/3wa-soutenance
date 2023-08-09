@@ -1,0 +1,43 @@
+[{
+  "_id": {
+    "$oid": "64c10bdd7f3acbfb49db43f5"
+  },
+  "username": "TestUser",
+  "email": "test_user@3wa.fr",
+  "password": "$2b$10$V1B7hmajeZz64LzCU0M4J.2u42MR89fF25/XAmUy9RMV3xvKLQv8a",
+  "role": "user",
+  "tokens": [
+    {
+      "token": "$2b$10$5V9dbQJj5qVsMvm26jyDS.xHcmzGhLWgirIlg0hoCFYfi7BkTWIOe",
+      "created_at": "2023-07-26T16:01:12.610Z"
+    },
+    {
+      "token": "$2b$10$flbuAqGAk5qiQK1Ee3U/tudsGMBx0rwV4p11LVpI.qulYbvCyZQ7.",
+      "created_at": "2023-07-26T16:06:29.517Z"
+    }
+  ],
+  "created_at": {
+    "$date": "2023-07-26T12:04:45.362Z"
+  },
+  "updated_at": {
+    "$date": "2023-07-26T12:04:45.362Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64c10c058eee2cd90e7c8ec7"
+  },
+  "username": "TestAdmin",
+  "email": "test_admin@3wa.fr",
+  "password": "$2b$10$deRBNN4.hDFCJy.0Rl0FG.EZmEu5874vB.zkU97d4nrpVXDyU3rJu",
+  "role": "admin",
+  "tokens": [],
+  "created_at": {
+    "$date": "2023-07-26T12:05:25.407Z"
+  },
+  "updated_at": {
+    "$date": "2023-07-26T12:05:25.407Z"
+  },
+  "__v": 0
+}]
