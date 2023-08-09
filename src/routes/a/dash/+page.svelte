@@ -4,12 +4,15 @@
 	import Header from '../../../libs/components/header/Header.svelte';
 	import Footer from '../../../libs/components/footer/Footer.svelte';
 	import { goto } from '$app/navigation';
+	import { checkAuth } from '../../../libs/functions/auth-functions';
+	import { page } from '$app/stores';
 
 	let loading = true;
 
 	onMount(async () => {
 		document.getElementById('currentYear').innerHTML = new Date().getFullYear().toString();
 		await setTimeout(async () => {
+			await checkAuth($page.url);
 			loading = false;
 		}, 10);
 	});
