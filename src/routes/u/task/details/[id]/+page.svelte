@@ -52,6 +52,20 @@
 		loading = false;
 	};
 
+	const onUpdateTask = async (task) => {
+		loading = true;
+		const url: URL = new URL(`${$page.url.origin}/api/task/update`);
+		url.searchParams.set('email', auth_email ?? '');
+		url.searchParams.set('token', auth_token ?? '');
+		url.searchParams.set('task_id', task?.id);
+		url.searchParams.set('title', task.title);
+		url.searchParams.set('finished', String(!task.finished));
+		if (task.description) url.searchParams.set('description', task.description);
+		if (task.content) url.searchParams.set('content', task.content);
+		const resp: Response = await fetch(url);
+		loading = false;
+	};
+
 	const onGotoTaskEdit = async () => await goto(`/u/task/details/${task.id}/edit`);
 </script>
 
@@ -92,6 +106,9 @@
 		</article>
 		<article class='tasks-informations'>
 			<h3>
+				{#if task}
+					<input bind:checked={task.finished} on:click={()  => onUpdateTask(task)} type='checkbox' />
+				{/if}
 				{task?.title ?? 'N/A'} <i class='delete fa fa-trash' on:click={() => onDeleteTask(task?.id)}
 																	on:keyup|preventDefault></i>
 			</h3>

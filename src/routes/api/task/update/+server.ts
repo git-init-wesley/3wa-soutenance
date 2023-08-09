@@ -17,6 +17,7 @@ export async function GET({ url }: { url: URL }) {
 
 	const task_id = url.searchParams.get('task_id');
 	const title = url.searchParams.get('title');
+	const finished = url.searchParams.get('finished');
 	const description = url.searchParams.get('description');
 	const content = url.searchParams.get('content');
 
@@ -100,6 +101,7 @@ export async function GET({ url }: { url: URL }) {
 
 		await task.updateOne({
 			title: title,
+			finished: finished,
 			description: description,
 			content: content,
 			updated_at: updated_date
@@ -113,6 +115,7 @@ export async function GET({ url }: { url: URL }) {
 			created_at: task.created_at,
 			updated_at: updated_date,
 			title: title,
+			finished: finished,
 			description: description,
 			content: content
 		}), { status: 200 });

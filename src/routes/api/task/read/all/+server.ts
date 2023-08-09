@@ -75,6 +75,7 @@ export async function GET({ url }: { url: URL }) {
 				created_at: task.created_at,
 				updated_at: task.updated_at,
 				title: task.title,
+				finished: task.finished,
 				description: task.description,
 				content: task.content
 			})),

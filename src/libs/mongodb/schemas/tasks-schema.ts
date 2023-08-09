@@ -3,6 +3,7 @@ import type { Task } from '../../task/task';
 
 export const STask: Schema<Task> = new Schema<Task>({
 	title: { required: true, type: Schema.Types.String },
+	finished: { required: false, type: Schema.Types.Boolean },
 	description: { required: false, type: Schema.Types.String },
 	content: { required: false, type: Schema.Types.String },
 	created_at: { required: false, type: Schema.Types.Date },

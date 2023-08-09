@@ -46,6 +46,20 @@
 		loading = false;
 	};
 
+	const onUpdateTask = async (task) => {
+		loading = true;
+		const url: URL = new URL(`${$page.url.origin}/api/task/update`);
+		url.searchParams.set('email', auth_email ?? '');
+		url.searchParams.set('token', auth_token ?? '');
+		url.searchParams.set('task_id', task?.id);
+		url.searchParams.set('title', task.title);
+		url.searchParams.set('finished', String(!task.finished));
+		if (task.description) url.searchParams.set('description', task.description);
+		if (task.content) url.searchParams.set('content', task.content);
+		const resp: Response = await fetch(url);
+		loading = false;
+	};
+
 	const onGotoTaskCreate = async () => await goto('/u/task/create');
 </script>
 
@@ -96,6 +110,7 @@
 					<section>
 						<article class='table-item-header'>
 							<h1>
+								<input bind:checked={task.finished} on:click={()  => onUpdateTask(task)} type='checkbox' />
 								<a href={`${$page.url.origin}/u/task/details/${task.id}`}>
 									{task?.title?.toLowerCase?.()}
 								</a>

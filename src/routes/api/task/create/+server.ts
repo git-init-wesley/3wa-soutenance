@@ -70,6 +70,7 @@ export async function GET({ url }: { url: URL }) {
 			created_at: date,
 			updated_at: date,
 			title: title,
+			finished: false,
 			description: description,
 			content: content
 		});
@@ -84,6 +85,7 @@ export async function GET({ url }: { url: URL }) {
 			created_at: date,
 			updated_at: date,
 			title: title,
+			finished: false,
 			description: description,
 			content: content
 		}), { status: 200 });
