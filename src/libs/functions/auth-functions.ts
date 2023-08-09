@@ -5,7 +5,7 @@ import { UserRoles } from '../user/user';
 export const checkAuth = async ($url: URL) => {
 	const auth_token = localStorage.getItem('auth_token');
 	const auth_mail = localStorage.getItem('auth_email');
-	if ($url.pathname.startsWith?.('/api') === true || !auth_token || !auth_mail) return undefined;
+	if ($url.pathname.startsWith?.('/api') === true) return undefined;
 
 	const url: URL = new URL(`${$url.origin}/api/auth/sign-in/token`);
 	url.searchParams.set('email', auth_mail ?? '');
