@@ -126,7 +126,7 @@
 				<section>
 					<article>
 						<label for='content'><i class='fa-solid fa-bookmark prep-start'></i>Contenue de la tâche</label>
-						<textarea bind:value={content} id='content' name='content'></textarea>
+						<textarea bind:value={content} id='content' name='content' rows='10'></textarea>
 					</article>
 				</section>
 				<button
